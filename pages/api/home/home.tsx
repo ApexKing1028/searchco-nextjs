@@ -541,6 +541,9 @@ const Home = ({
           id: uuidv4(),
           name: 'New Conversation',
           messages: [],
+          model: OpenAIModels[defaultModelId],
+          prompt: DEFAULT_SYSTEM_PROMPT,
+          temperature: DEFAULT_TEMPERATURE,
           folderId: null,
         },
       });
