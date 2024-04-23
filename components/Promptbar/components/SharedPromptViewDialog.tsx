@@ -1,7 +1,13 @@
 import { FC, KeyboardEvent, useContext, useEffect, useRef, useState } from 'react';
 import { Prompt, SharedModalPrompt } from '@/types/prompt';
-import { addDoc, collection, DocumentData, DocumentReference, getDocs, query, updateDoc, where, doc } from 'firebase/firestore';
+import { addDoc, collection, DocumentData, DocumentReference, getDocs, query, updateDoc, where, doc, serverTimestamp } from 'firebase/firestore';
 import HomeContext from '@/pages/api/home/home.context';
+import { Oval } from 'react-loader-spinner';
+import { savePrompts } from '@/utils/app/prompts';
+import { db } from '@/utils/firebase';
+import { useAuth } from '@/context/authContext';
+import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
 
 interface Props {
     open: boolean;
@@ -9,12 +15,17 @@ interface Props {
 }
 
 export const SharedPromptViewDialog: FC<Props> = ({ open, onClose }) => {
-    const [prompt, setPrompt] = useState<SharedModalPrompt | null>(null);
+    const [name, setName] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
+    const [content, setContent] = useState<string>("");
+    const [isSaving, setIsSaving] = useState<boolean>(false);
+    const { user } = useAuth();
 
     const modalRef = useRef<HTMLDivElement>(null);
 
     const {
         state: {
+            prompts,
             sharedPrompt,
         },
         dispatch,
@@ -22,7 +33,9 @@ export const SharedPromptViewDialog: FC<Props> = ({ open, onClose }) => {
 
     useEffect(() => {
         if (sharedPrompt) {
-            setPrompt(sharedPrompt);
+            setName(sharedPrompt.name);
+            setDescription(sharedPrompt.description);
+            setContent(sharedPrompt.content);
         }
     }, [sharedPrompt])
 
@@ -46,8 +59,47 @@ export const SharedPromptViewDialog: FC<Props> = ({ open, onClose }) => {
     }, [onClose]);
 
     const handleUse = () => {
-        dispatch({ field: "promptMessage", value: prompt?.content });
+        dispatch({ field: "promptMessage", value: content });
         dispatch({ field: "isSharedPromptDialogOpen", value: false })
+    }
+
+    const handleSave = async () => {
+        setIsSaving(true);
+
+        let docId = uuidv4()
+        const newPrompt: Prompt = {
+            id: docId,
+            name,
+            description,
+            content,
+            folderId: null,
+        };
+
+        const newPromptTemp = {
+            id: docId,
+            name,
+            description,
+            content,
+            folderId: null,
+            createdAt: serverTimestamp()
+        }
+        const updatedPrompts = [...prompts, newPrompt];
+        dispatch({ field: 'prompts', value: updatedPrompts });
+
+        savePrompts(updatedPrompts);
+
+        if (user) {
+            try {
+                await addDoc(collection(db, "history", user?.email!, "prompts"), { ...newPromptTemp });
+            } catch (error) {
+                let message = (error as Error).message;
+                console.log(message);
+            }
+        }
+
+        toast.success("The prompt was successfully updated.")
+
+        setIsSaving(false);
     }
 
     return (<>
@@ -71,8 +123,8 @@ export const SharedPromptViewDialog: FC<Props> = ({ open, onClose }) => {
                         </div>
                         <input
                             className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
-                            disabled
-                            value={prompt?.name}
+                            value={name}
+                            onChange={e => setName(e.target.value)}
                         />
 
                         <div className="mt-6 text-sm font-bold text-black dark:text-neutral-200">
@@ -81,8 +133,8 @@ export const SharedPromptViewDialog: FC<Props> = ({ open, onClose }) => {
                         <textarea
                             className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
                             style={{ resize: 'none' }}
-                            disabled
-                            value={prompt?.description}
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
                             rows={3}
                         />
 
@@ -92,18 +144,35 @@ export const SharedPromptViewDialog: FC<Props> = ({ open, onClose }) => {
                         <textarea
                             className="mt-2 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
                             style={{ resize: 'none' }}
-                            disabled
-                            value={prompt?.content}
+                            value={content}
+                            onChange={e => setContent(e.target.value)}
                             rows={10}
                         />
-
-                        <button
-                            type="button"
-                            className="mt-3 w-full rounded-[10px] flex justify-center items-center gap-2 border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#343541] dark:text-white"
-                            onClick={handleUse}
-                        >
-                            <span className='font-bold text-[20px]'> Use </span>
-                        </button>
+                        <div className='flex w-full gap-2'>
+                            <button
+                                type="button"
+                                className="mt-3 w-full rounded-[10px] flex justify-center items-center gap-2 border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#343541] dark:text-white"
+                                onClick={handleSave}
+                            >
+                                {isSaving && <Oval
+                                    visible={true}
+                                    height="20"
+                                    width="30"
+                                    color="#4fa94d"
+                                    ariaLabel="oval-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass=""
+                                />}
+                                <span className='font-bold text-[20px]'> {isSaving ? "Saving" : "Save"} </span>
+                            </button>
+                            <button
+                                type="button"
+                                className="mt-3 w-full rounded-[10px] flex justify-center items-center gap-2 border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#343541] dark:text-white"
+                                onClick={handleUse}
+                            >
+                                <span className='font-bold text-[20px]'>Use</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

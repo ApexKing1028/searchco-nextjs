@@ -1,11 +1,12 @@
-import { KeyboardEvent, useContext, useEffect, useRef, useState, FC } from 'react';
+import { useContext, useEffect, useRef, useState, FC } from 'react';
 import { Oval } from 'react-loader-spinner'
 import { toast } from 'react-toastify';
-
+import { IconSettings } from '@tabler/icons-react';
 import { db } from '@/utils/firebase';
 import { collection, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from 'firebase/firestore';
 
 import { useAuth } from '@/context/authContext';
+import HomeContext from '@/pages/api/home/home.context';
 
 interface ProfileDialogProps {
     open: boolean;
@@ -19,6 +20,10 @@ export const KeysDialog: FC<ProfileDialogProps> = ({ open, onClose }) => {
     const [isSaving, setIsSaving] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
     const { user, setUser } = useAuth();
+
+    const {
+        dispatch
+    } = useContext(HomeContext);
 
     useEffect(() => {
         if (user) {
@@ -106,48 +111,59 @@ export const KeysDialog: FC<ProfileDialogProps> = ({ open, onClose }) => {
                             <div className="text-3xl font-bold text-black dark:text-white">Keys</div>
 
                             <div className='w-full flex mt-[10px] text-black dark:text-neutral-200 font-bold'>Openai Key</div>
-                            <input
-                                className="mt-1 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
-                                placeholder="Openai Key"
-                                value={pplxKey}
-                                onChange={e => setPplxKey(e.target.value)}
-                            />
+                            <div className='flex gap-2'>
+                                <input
+                                    className="mt-1 w-[85%] rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
+                                    placeholder="Openai Key"
+                                    value={openaiKey}
+                                    disabled
+                                />
+                                <button
+                                    type="button"
+                                    className="mt-1 w-[15%] rounded-[10px] flex justify-center items-center gap-2 border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#343541] dark:text-white"
+                                    onClick={() => { dispatch({ field: "isOpenaiKeyDialogOpen", value: true }); dispatch({ field: "isKeysDialogOpen", value: false }); }}
+                                >
+                                    <span className='font-bold text-[20px]'><IconSettings size={18} /></span>
+                                </button>
+                            </div>
 
                             <div className='w-full flex mt-[10px] text-black dark:text-neutral-200 font-bold'>Perplexity Key</div>
-                            <input
-                                className="mt-1 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
-                                placeholder="Perplexity Key"
-                                value={openaiKey}
-                                onChange={e => setOpenaiKey(e.target.value)}
-                            />
-                            <div className='w-full flex mt-[10px] text-black dark:text-neutral-200 font-bold'>Google Gemini Key</div>
-                            <input
-                                className="mt-1 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
-                                placeholder="Google Gemini Key"
-                                value={geminiKey}
-                                onChange={e => setGeminiKey(e.target.value)}
-                            />
+                            <div className='flex gap-2'>
+                                <input
+                                    className="mt-1 w-[85%] rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
+                                    placeholder="Perplexity Key"
+                                    value={pplxKey}
+                                    disabled
+                                />
+                                <button
+                                    type="button"
+                                    className="mt-1 w-[15%] rounded-[10px] flex justify-center items-center gap-2 border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#343541] dark:text-white"
+                                    onClick={() => { dispatch({ field: "isPplxKeyDialogOpen", value: true }); dispatch({ field: "isKeysDialogOpen", value: false }); }}
+                                >
+                                    <span className='font-bold text-[20px]'><IconSettings size={18} /></span>
+                                </button>
+                            </div>
 
-                            <button
-                                type="button"
-                                className="mt-[20px] w-full rounded-[10px] flex justify-center items-center gap-2 border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#343541] dark:text-white"
-                                onClick={handleSaveKeys}
-                            >
-                                {isSaving && <Oval
-                                    visible={true}
-                                    height="20"
-                                    width="30"
-                                    color="#4fa94d"
-                                    ariaLabel="oval-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClass=""
-                                />}
-                                <span className='font-bold text-[20px]'> {isSaving ? "Saving" : "Save"} </span>
-                            </button>
+                            <div className='w-full flex mt-[10px] text-black dark:text-neutral-200 font-bold'>Google Gemini Key</div>
+                            <div className='flex gap-2'>
+                                <input
+                                    className="mt-1 w-[85%] rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"
+                                    placeholder="Google Gemini Key"
+                                    value={geminiKey}
+                                    disabled
+                                />
+                                <button
+                                    type="button"
+                                    className="mt-1 w-[15%] rounded-[10px] flex justify-center items-center gap-2 border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#343541] dark:text-white"
+                                    onClick={() => { dispatch({ field: "isGeminiKeyDialogOpen", value: true }); dispatch({ field: "isKeysDialogOpen", value: false }); }}
+                                >
+                                    <span className='font-bold text-[20px]'><IconSettings size={18} /></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }

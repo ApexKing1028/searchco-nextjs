@@ -32,6 +32,10 @@ export interface HomeInitialState {
   isNameDialogOpen: boolean;
   sharedPrompt: SharedModalPrompt | undefined;
   isSharedPromptDialogOpen: boolean;
+  isOpenaiKeyDialogOpen: boolean;
+  isPplxKeyDialogOpen: boolean;
+  isGeminiKeyDialogOpen: boolean;
+  isKeysDialogOpen: boolean;
 }
 
 export const initialState: HomeInitialState = {
@@ -60,5 +64,9 @@ export const initialState: HomeInitialState = {
   promptMessage: "",
   isNameDialogOpen: false,
   sharedPrompt: undefined,
-  isSharedPromptDialogOpen: false
+  isSharedPromptDialogOpen: false,
+  isOpenaiKeyDialogOpen: false,
+  isPplxKeyDialogOpen: false,
+  isGeminiKeyDialogOpen: false,
+  isKeysDialogOpen: false
 };

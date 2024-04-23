@@ -44,6 +44,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/context/authContext';
 import { addDoc, collection, deleteDoc, getDocs, query, serverTimestamp, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
+import Spinner from '@/components/Spinner';
 
 interface Props {
   serverSideApiKeyIsSet: boolean;
