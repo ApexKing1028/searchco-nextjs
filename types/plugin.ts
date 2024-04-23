@@ -16,7 +16,7 @@ export enum PluginID {
 }
 
 export enum PluginName {
-  GOOGLE_SEARCH = 'Google Search',
+  GOOGLE_SEARCH = 'Web Search',
 }
 
 export const Plugins: Record<PluginID, Plugin> = {
