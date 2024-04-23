@@ -474,10 +474,8 @@ const Home = ({
       }
 
       dispatch({ field: 'folders', value: [defaultPromptFolder, ...localFolders] })
-      console
-      fetch('/api/prompts').then(resp => resp.json()).then((data) => {
-
-        const commonPrompts = data.map((item: { id: number, name: string, content: string }) => (
+      fetch('/api/prompts').then(resp => resp.json()).then(async (data) => {
+        const commonPrompts = await data.map((item: { id: number, name: string, content: string }) => (
           {
             id: item.id,
             name: item.name,
