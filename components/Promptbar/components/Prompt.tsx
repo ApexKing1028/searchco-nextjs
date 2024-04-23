@@ -98,7 +98,7 @@ export const PromptComponent = ({ prompt }: Props) => {
         </div>
       </button>
 
-      {(isDeleting || isRenaming) && (
+      {prompt.folderId !== "default-prompts-folder" && (isDeleting || isRenaming) && (
         <div className="absolute right-1 z-10 flex text-gray-300">
           <SidebarActionButton handleClick={handleDelete}>
             <IconCheck size={18} />
@@ -110,7 +110,7 @@ export const PromptComponent = ({ prompt }: Props) => {
         </div>
       )}
 
-      {!isDeleting && !isRenaming && (
+      {prompt.folderId !== "default-prompts-folder" && !isDeleting && !isRenaming && (
         <div className="absolute right-1 z-10 flex text-gray-300">
           <SidebarActionButton handleClick={handleOpenDeleteModal}>
             <IconTrash size={18} />

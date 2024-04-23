@@ -23,7 +23,7 @@ import SidebarActionButton from '@/components/Buttons/SidebarActionButton';
 interface Props {
   currentFolder: FolderInterface;
   searchTerm: string;
-  handleDrop: (e: any, folder: FolderInterface) => void;
+  handleDrop: (e: any, folder: FolderInterface) => void | null;
   folderComponent: (ReactElement | undefined)[];
 }
 
@@ -57,7 +57,8 @@ const Folder = ({
     if (e.dataTransfer) {
       setIsOpen(true);
 
-      handleDrop(e, currentFolder);
+
+      handleDrop !== null && handleDrop(e, currentFolder);
 
       e.target.style.background = 'none';
     }
@@ -161,7 +162,7 @@ const Folder = ({
           </div>
         )}
 
-        {!isDeleting && !isRenaming && (
+        {currentFolder.id != "default-prompts-folder" && !isDeleting && !isRenaming && (
           <div className="absolute right-1 z-10 flex text-gray-300">
             <SidebarActionButton
               handleClick={(e) => {

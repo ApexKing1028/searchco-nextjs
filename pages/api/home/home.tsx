@@ -105,28 +105,6 @@ const Home = ({
     dispatch({ field: 'modelError', value: getModelsError(error) });
   }, [dispatch, error, getModelsError]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/get_prompts`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          const data: LibraryPrompt[] = await response.json();
-          dispatch({ field: "libraryPrompts", value: data })
-        }
-      }
-      catch (err) {
-        console.log((err as Error).message)
-      }
-    }
-    fetchData()
-  }, []);
-
   // FETCH MODELS ----------------------------------------------
 
   const handleSelectConversation = (conversation: Conversation) => {
@@ -404,7 +382,7 @@ const Home = ({
       }
       fetchConversationData();
 
-      // Fetch Folders Data
+      // Fetch Folders Data 
       const fetchFolderData = async () => {
         if (user) {
           const foldersRef = collection(db, "history", user?.email, "folders");
@@ -415,8 +393,7 @@ const Home = ({
               ...doc.data()
             }));
 
-            dispatch({ field: 'folders', value: folders });
-            localStorage.setItem('conversationHistory', JSON.stringify(conversations));
+            localStorage.setItem('folders', JSON.stringify(folders));
           } catch (error) {
             console.error("Failed to fetch conversations:", error);
           }
@@ -484,15 +461,55 @@ const Home = ({
       dispatch({ field: 'showPromptbar', value: showPromptbar === 'true' });
     }
 
+    const prompts = localStorage.getItem('prompts');
+
     const folders = localStorage.getItem('folders');
-    if (folders) {
-      dispatch({ field: 'folders', value: JSON.parse(folders) });
+    const defaultFolderId = 'default-prompts-folder'
+    const localFolders: FolderInterface[] = folders ? JSON.parse(folders) : []
+    if (localFolders.findIndex(item => item.id === defaultFolderId) === -1) {
+      const defaultPromptFolder = {
+        id: defaultFolderId,
+        name: 'Prompt Library',
+        type: 'prompt'
+      }
+
+      dispatch({ field: 'folders', value: [defaultPromptFolder, ...localFolders] })
+      console
+      fetch('/api/prompts').then(resp => resp.json()).then((data) => {
+
+        const commonPrompts = data.map((item: { id: number, name: string, content: string }) => (
+          {
+            id: item.id,
+            name: item.name,
+            description: '',
+            content: item.content,
+            model: OpenAIModels[defaultModelId],
+            folderId: defaultFolderId
+          }
+        ))
+
+        const libraryPromptsTemp = data.map((item: { id: number, name: string, content: string }) => (
+          {
+            id: item.id,
+            label: item.name,
+            value: item.content
+          }
+        ))
+
+        dispatch({ field: "libraryPrompts", value: libraryPromptsTemp })
+        if (prompts) {
+          dispatch({ field: 'prompts', value: [...commonPrompts, ...JSON.parse(prompts)] })
+        } else {
+          dispatch({
+            field: 'prompts', value: commonPrompts
+          })
+          console.log(data)
+        }
+      })
+    } else {
+      prompts && dispatch({ field: 'prompts', value: JSON.parse(prompts) })
     }
 
-    const prompts = localStorage.getItem('prompts');
-    if (prompts) {
-      dispatch({ field: 'prompts', value: JSON.parse(prompts) });
-    }
 
     const conversationHistory = localStorage.getItem('conversationHistory');
     if (conversationHistory) {

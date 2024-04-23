@@ -1,15 +1,17 @@
-import { FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { FC, KeyboardEvent, useContext, useEffect, useRef, useState } from 'react';
 
 import { useTranslation } from 'next-i18next';
 
 import { Prompt } from '@/types/prompt';
 import { Oval } from 'react-loader-spinner';
 import { useAuth } from '@/context/authContext';
-import { addDoc, collection, DocumentData, DocumentReference, getDocs, query, updateDoc, where, doc } from 'firebase/firestore';
+import { addDoc, collection, DocumentData, DocumentReference, getDocs, query, updateDoc, where, doc, serverTimestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { IconShare } from '@tabler/icons-react';
 import { db } from '@/utils/firebase';
 import { v4 as uuidv4 } from 'uuid';
+import { savePrompts } from '@/utils/app/prompts';
+import HomeContext from '@/pages/api/home/home.context';
 
 interface Props {
   prompt: Prompt;
@@ -25,6 +27,11 @@ export const PromptModal: FC<Props> = ({ prompt, onClose, onUpdatePrompt }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [shareUser, setShareUser] = useState("");
+
+  const {
+    state: { prompts },
+    dispatch: homeDispatch,
+  } = useContext(HomeContext);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -62,6 +69,35 @@ export const PromptModal: FC<Props> = ({ prompt, onClose, onUpdatePrompt }) => {
 
   const handleSave = async () => {
     setIsSaving(true);
+
+    if (prompt.folderId === "default-prompts-folder") {
+      const newPrompt = {
+        ...prompt,
+        name,
+        description,
+        content: content.trim(),
+        folderId: null,
+        createdAt: serverTimestamp()
+      };
+      const updatedPrompts = [...prompts, newPrompt];
+      homeDispatch({ field: 'prompts', value: updatedPrompts });
+      savePrompts([...prompts, newPrompt]);
+
+      if (user?.email) {
+        try {
+          await addDoc(collection(db, "history", user?.email!, "prompts"), { ...newPrompt });
+        } catch (error) {
+          let message = (error as Error).message;
+          console.log(message);
+        }
+      }
+
+      toast.success("The prompt was successfully updated.")
+      setIsSaving(false);
+
+      return;
+    }
+
     const updatedPrompt = {
       ...prompt,
       name,
