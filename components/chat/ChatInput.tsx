@@ -4,7 +4,9 @@ import {
   IconBrandGoogle,
   IconPlayerStop,
   IconRepeat,
+  IconSearch,
   IconSend,
+  IconTool,
 } from '@tabler/icons-react';
 import {
   KeyboardEvent,
