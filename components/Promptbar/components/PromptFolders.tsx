@@ -28,6 +28,10 @@ export const PromptFolders = () => {
     if (e.dataTransfer) {
       const prompt = JSON.parse(e.dataTransfer.getData('prompt'));
 
+      if (folder.id === "default-prompts-folder") {
+        return;
+      }
+
       const updatedPrompt = {
         ...prompt,
         folderId: folder.id,
