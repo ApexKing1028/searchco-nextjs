@@ -130,7 +130,7 @@ export const SharedPromptDialog: FC<Props> = ({ open, onClose }) => {
                         className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-700 bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[400px] w-full sm:max-w-[800px] sm:p-6 sm:align-middle"
                         role="dialog"
                     >
-                        <div className="text-lg pb-4 font-bold text-black dark:text-neutral-200">
+                        <div className="text-3xl pb-4 font-bold text-black dark:text-neutral-200">
                             Shared Prompts
                         </div>
 
