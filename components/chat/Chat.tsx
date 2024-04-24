@@ -52,7 +52,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       apiKey,
       pluginKeys,
       serverSideApiKeyIsSet,
-      messageIsStreaming,
+      lightMode,
       modelError,
       loading,
       prompts,
@@ -369,11 +369,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     };
   }, [messagesEndRef]);
 
-  useEffect(() => {
-    let dt = localStorage.getItem("settings") || "dark";
-    setTheme(dt);
-  },)
-
   return (
     <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
       {!(apiKey || serverSideApiKeyIsSet) ? (
@@ -400,7 +395,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      theme === "dark" ? < Image src="/assets/images/logo-black.png" alt="Description of Image" height={50} /> : < Image src="/assets/images/logo-white.png" alt="Description of Image" height={50} />
+                      lightMode === "dark" ? < Image src="/assets/images/logo-black.png" alt="Description of Image" height={30} /> : < Image src="/assets/images/logo-white.png" alt="Description of Image" height={30} />
                     )}
                   </div>
 
