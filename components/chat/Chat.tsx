@@ -82,7 +82,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         let dt = doc.data();
         await updateDoc(doc.ref, { freeCredit: dt.freeCredit - 1 });
       }
-      toast.success("Keys are saved successfully.")
     }
     catch (error) {
       let message = (error as Error).message;
