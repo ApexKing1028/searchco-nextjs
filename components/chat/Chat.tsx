@@ -395,7 +395,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      lightMode === "dark" ? < Image src="/assets/images/logo-black.png" alt="Description of Image" height={30} /> : < Image src="/assets/images/logo-white.png" alt="Description of Image" height={30} />
+                      lightMode === "dark" ? <Image src="/assets/images/logo-black.png" alt="Description of Image" width={300} height={30} /> : < Image src="/assets/images/logo-white.png" alt="Description of Image" width={300} height={30} />
                     )}
                   </div>
 
