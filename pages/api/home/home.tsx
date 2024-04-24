@@ -260,6 +260,7 @@ const Home = ({
 
     dispatch({ field: 'selectedConversation', value: newConversation });
     dispatch({ field: 'conversations', value: updatedConversations });
+    dispatch({ field: 'service', value: "chatgpt" });
 
     saveConversation(newConversation);
     saveConversations(updatedConversations);

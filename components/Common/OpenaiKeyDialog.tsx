@@ -23,7 +23,7 @@ export const OpenaiKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => 
 
     const handleSaveProfileInformation = async () => {
         if (key?.length <= 0) {
-            toast.warn("Please input openai key.");
+            toast.warn("Please input OpenAI key.");
             return;
         }
         try {
@@ -35,7 +35,7 @@ export const OpenaiKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => 
                 for (const doc of querySnapshot.docs) {
                     await updateDoc(doc.ref, { openaiKey: key });
                 }
-                toast.success("Your openai key was saved successfully.")
+                toast.success("Your OpenAI key was saved successfully.")
                 setUser({ ...user, openaiKeyEnable: true, openaiKey: key });
             }
             catch (error) {
@@ -85,7 +85,7 @@ export const OpenaiKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => 
                                 className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-700  bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[600px] w-full sm:max-w-lg sm:p-6 sm:align-middle"
                                 role="dialog"
                             >
-                                <div className="text-3xl font-bold text-black dark:text-neutral-200">Openai Key Adding</div>
+                                <div className="text-3xl font-bold text-black dark:text-neutral-200">OpenAI Key Adding</div>
 
                                 <input
                                     className="mt-6 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"

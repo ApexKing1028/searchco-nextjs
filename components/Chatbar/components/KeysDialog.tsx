@@ -110,7 +110,7 @@ export const KeysDialog: FC<ProfileDialogProps> = ({ open, onClose }) => {
                         >
                             <div className="text-3xl font-bold text-black dark:text-white">Keys</div>
 
-                            <div className='w-full flex mt-[10px] text-black dark:text-neutral-200 font-bold'>Openai Key</div>
+                            <div className='w-full flex mt-[10px] text-black dark:text-neutral-200 font-bold'>OpenAI Key</div>
                             <div className='flex gap-2'>
                                 <input
                                     className="mt-1 w-[85%] rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-[#40414F] dark:text-neutral-100"

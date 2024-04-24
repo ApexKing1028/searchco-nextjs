@@ -58,9 +58,9 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error) {
     console.error(error);
     if (error instanceof OpenAIError) {
-      return new Response('Error', { status: 500, statusText: error.message });
+      return new Response('Error', { status: 500, statusText: "Pleas check OpenAI Key. There was a problem ocurred with Openai Key." });
     } else {
-      return new Response('Error', { status: 500, statusText: "Hello" });
+      return new Response('Error', { status: 500, statusText: "Please check internet connection." });
     }
   }
 };
