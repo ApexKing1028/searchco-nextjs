@@ -6,7 +6,7 @@ export const getEndpoint = (plugin: Plugin | null) => {
   }
 
   if (plugin.id === PluginID.GOOGLE_SEARCH) {
-    return 'api/google';
+    return 'api/googlestream';
   }
 
   return 'api/chat';
