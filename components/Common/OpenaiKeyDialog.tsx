@@ -17,15 +17,30 @@ export const OpenaiKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => 
     const modalRef = useRef<HTMLDivElement>(null);
     const { user, setUser } = useAuth();
 
-    const {
-        dispatch,
-    } = useContext(HomeContext);
-
     const handleSaveProfileInformation = async () => {
         if (key?.length <= 0) {
             toast.warn("Please input OpenAI key.");
             return;
         }
+
+        const body = JSON.stringify({
+            type: "chatgpt",
+            key
+        });
+        const controller = new AbortController();
+        const response = await fetch("/api/test", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
+            body,
+        });
+        if (!response.ok) {
+            toast.error(response.statusText);
+            return;
+        }
+
         try {
             setIsSaving(true);
             const q = query(collection(db, "users"), where("email", "==", user.email));
