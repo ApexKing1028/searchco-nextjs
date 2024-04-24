@@ -22,7 +22,7 @@ import { throttle } from '@/utils/data/throttle';
 
 import { ChatBody, Conversation, Message } from '@/types/chat';
 import { Plugin } from '@/types/plugin';
-
+import Image from 'next/image';
 import HomeContext from '@/pages/api/home/home.context';
 
 import Spinner from '../Spinner';
@@ -67,6 +67,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [showScrollDownButton, setShowScrollDownButton] =
     useState<boolean>(false);
+  const [theme, setTheme] = useState<string>("dark");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -368,6 +369,11 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     };
   }, [messagesEndRef]);
 
+  useEffect(() => {
+    let dt = localStorage.getItem("settings") || "dark";
+    setTheme(dt);
+  },)
+
   return (
     <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
       {!(apiKey || serverSideApiKeyIsSet) ? (
@@ -394,7 +400,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      'Search.co'
+                      theme === "dark" ? < Image src="/assets/images/logo-dark.png" alt="Description of Image" height={50} /> : < Image src="/assets/images/logo-dark.png" alt="Description of Image" height={50} />
                     )}
                   </div>
 
