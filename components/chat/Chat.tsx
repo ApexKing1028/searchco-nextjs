@@ -264,9 +264,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           saveConversations(updatedConversations);
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
-          if (user && service === "chatgpt" && !user.openaiKeyEnable) {
-            disCountFreeCredit();
-          }
+        }
+        if (user && service === "chatgpt" && !user.openaiKeyEnable) {
+          disCountFreeCredit();
         }
       }
     },
