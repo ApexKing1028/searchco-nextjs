@@ -8,19 +8,25 @@ import wasm from '../../node_modules/@dqbd/tiktoken/lite/tiktoken_bg.wasm?module
 
 import tiktokenModel from '@dqbd/tiktoken/encoders/cl100k_base.json';
 import { Tiktoken, init } from '@dqbd/tiktoken/lite/init';
-import { GoogleBody, GoogleSource } from '@/types/google';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Readability } from '@mozilla/readability';
-import jsdom, { JSDOM } from 'jsdom';
+import { OPENAI_API_HOST } from '@/utils/app/const';
 import { cleanSourceText } from '@/utils/server/google';
+
+import { GoogleBody, GoogleSource } from '@/types/google';
+
+import { Readability } from '@mozilla/readability';
 import endent from 'endent';
+import jsdom, { JSDOM } from 'jsdom';
+
 export const config = {
     runtime: 'edge',
 };
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<any>): Promise<Response> => {
+
+const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     try {
-        const { messages, key, model, temperature, googleAPIKey, googleCSEId } = req.body as GoogleBody;
+        const { messages, key, model, googleAPIKey, googleCSEId, temperature } =
+            req.body as GoogleBody;
 
         const userMessage = messages[messages.length - 1];
         const query = encodeURIComponent(userMessage.content.trim());
@@ -90,30 +96,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>): Promise<
         const filteredSources: GoogleSource[] = sourcesWithText.filter(Boolean);
 
         const answerPrompt = endent`
-    Provide me with the information I requested. Use the sources to provide an accurate response. Respond in markdown format. Cite the sources you used as a markdown link as you use them at the end of each sentence by number of the source (ex: [[1]](link.com)). Provide an accurate response and then stop. Today's date is ${new Date().toLocaleDateString()}.
-
-    Example Input:
-    What's the weather in San Francisco today?
-
-    Example Sources:
-    [Weather in San Francisco](https://www.google.com/search?q=weather+san+francisco)
-
-    Example Response:
-    It's 70 degrees and sunny in San Francisco today. [[1]](https://www.google.com/search?q=weather+san+francisco)
-
-    Input:
-    ${userMessage.content.trim()}
-
-    Sources:
-    ${filteredSources.map((source) => {
+        Provide me with the information I requested. Use the sources to provide an accurate response. Respond in markdown format. Cite the sources you used as a markdown link as you use them at the end of each sentence by number of the source (ex: [[1]](link.com)). Provide an accurate response and then stop. Today's date is ${new Date().toLocaleDateString()}.
+    
+        Example Input:
+        What's the weather in San Francisco today?
+    
+        Example Sources:
+        [Weather in San Francisco](https://www.google.com/search?q=weather+san+francisco)
+    
+        Example Response:
+        It's 70 degrees and sunny in San Francisco today. [[1]](https://www.google.com/search?q=weather+san+francisco)
+    
+        Input:
+        ${userMessage.content.trim()}
+    
+        Sources:
+        ${filteredSources.map((source) => {
             return endent`
-      ${source.title} (${source.link}):
-      ${source.text}
-      `;
+          ${source.title} (${source.link}):
+          ${source.text}
+          `;
         })}
-
-    Response:
-    `;
+    
+        Response:
+        `;
 
         await init((imports) => WebAssembly.instantiate(wasm, imports));
         const encoding = new Tiktoken(
