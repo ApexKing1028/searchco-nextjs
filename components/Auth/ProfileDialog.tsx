@@ -104,7 +104,7 @@ export const ProfileDialog: FC<ProfileDialogProps> = ({ open, onClose }) => {
                             className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-700  bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[600px] w-full sm:max-w-lg sm:p-6 sm:align-middle"
                             role="dialog"
                         >
-                            <div className="text-3xl font-bold text-black dark:text-white">Your Profile</div>
+                            <div className="text-3xl font-bold text-black dark:text-white">Profile</div>
 
                             <div className='w-full flex mt-[20px] text-black dark:text-neutral-200 font-bold'>Name</div>
                             <input

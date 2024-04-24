@@ -160,8 +160,8 @@ export const SharedPromptDialog: FC<Props> = ({ open, onClose }) => {
                                                     <div className='mb-3 mt-3'>
                                                         <Oval
                                                             visible={true}
-                                                            height="20"
-                                                            width="30"
+                                                            height="30"
+                                                            width="100"
                                                             color="#4fa94d"
                                                             ariaLabel="oval-loading"
                                                             wrapperStyle={{}}

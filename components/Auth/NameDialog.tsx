@@ -52,7 +52,7 @@ export const NameDialog: FC<NameDialogProps> = ({ open, onClose }) => {
                         name,
                         role: "user"
                     })
-                    toast.success("Your profile was created successfully.")
+                    toast.success("profile was created successfully.")
                 }
                 else {
                     toast.warn("The name already exits. Please input the other name.");
