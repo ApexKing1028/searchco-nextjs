@@ -98,14 +98,11 @@ export const UserDashboardDialog: FC<UserDashboardDialogProps> = ({ open, onClos
                             className="hidden sm:inline-block sm:h-screen sm:align-middle"
                             aria-hidden="true"
                         />
-
                         <div
                             ref={modalRef}
                             className="dark:border-netural-400 inline-block max-h-[400px] transform overflow-y-auto rounded-lg border border-gray-700  bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all dark:bg-[#202123] sm:my-8 sm:max-h-[600px] w-full sm:max-w-lg sm:p-6 sm:align-middle"
                             role="dialog"
                         >
-
-
                             <div className='w-full flex justify-between items-center'>
                                 <div className="text-3xl font-bold text-black dark:text-white">Users Dashboard</div>
                                 {user?.role === "admin" && <button
