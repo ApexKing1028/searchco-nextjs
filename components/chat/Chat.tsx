@@ -400,7 +400,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                         <Spinner size="16px" className="mx-auto" />
                       </div>
                     ) : (
-                      theme === "dark" ? < Image src="/assets/images/logo-dark.png" alt="Description of Image" height={50} /> : < Image src="/assets/images/logo-dark.png" alt="Description of Image" height={50} />
+                      theme === "dark" ? < Image src="/assets/images/logo-black.png" alt="Description of Image" height={50} /> : < Image src="/assets/images/logo-white.png" alt="Description of Image" height={50} />
                     )}
                   </div>
 
