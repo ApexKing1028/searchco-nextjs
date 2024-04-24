@@ -97,7 +97,7 @@ export const ChatInput = ({
       let afterSignUpFreeCredit = Number(localStorage.getItem("afterSignUpFreeCredit"));
       if (service === "chatgpt" && !user?.openaiKeyEnable) {
         if (afterSignUpFreeCredit === 0) {
-          toast.warn("Please input your openai key.");
+          toast.warn("Please input your OpenAI key.");
           homeDispatch({ field: "isOpenaiKeyDialogOpen", value: true });
           return;
         }
