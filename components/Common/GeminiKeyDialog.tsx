@@ -36,6 +36,7 @@ export const GeminiKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => 
                     await updateDoc(doc.ref, { geminiKey: key });
                 }
                 toast.success("Your google gemini key was saved successfully.")
+                setUser({ ...user, geminiKeyEnable: true });
             }
             catch (error) {
                 let message = (error as Error).message;

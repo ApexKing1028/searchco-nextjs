@@ -28,6 +28,9 @@ import { PluginSelect } from '@/components/chat/PluginSelect';
 import { PromptList } from '@/components/chat/PromptList';
 import { VariableModal } from '@/components/chat/VariableModal';
 import { toast } from 'react-toastify';
+import { useAuth } from '@/context/authContext';
+import { collection, DocumentData, DocumentReference, getDocs, query, updateDoc } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
 
 interface Props {
   onSend: (message: Message, plugin: Plugin | null) => void;
@@ -49,7 +52,7 @@ export const ChatInput = ({
   const { t } = useTranslation('chat');
 
   const {
-    state: { selectedConversation, messageIsStreaming, prompts, promptMessage },
+    state: { selectedConversation, messageIsStreaming, prompts, promptMessage, service },
 
     dispatch: homeDispatch,
   } = useContext(HomeContext);
@@ -63,6 +66,8 @@ export const ChatInput = ({
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showPluginSelect, setShowPluginSelect] = useState(false);
   const [plugin, setPlugin] = useState<Plugin | null>(null);
+
+  const { user } = useAuth();
 
   const promptListRef = useRef<HTMLUListElement | null>(null);
 
@@ -78,6 +83,40 @@ export const ChatInput = ({
   };
 
   const handleSend = () => {
+    if (!user) {
+      let beforeSignUpFreeCredit = Number(localStorage.getItem("beforeSignUpFreeCredit"));
+      if (beforeSignUpFreeCredit === 0) {
+        toast.warn("Please sign up to continue chatting");
+        return;
+      }
+      else {
+        localStorage.setItem("beforeSignUpFreeCredit", String(beforeSignUpFreeCredit - 1));
+      }
+    }
+    else {
+      let afterSignUpFreeCredit = Number(localStorage.getItem("afterSignUpFreeCredit"));
+      if (service === "chatgpt" && !user?.openaiKeyEnable) {
+        if (afterSignUpFreeCredit === 0) {
+          toast.warn("Please input your openai key.");
+          homeDispatch({ field: "isOpenaiKeyDialogOpen", value: true });
+          return;
+        }
+        else {
+          localStorage.setItem("afterSignUpFreeCredit", String(afterSignUpFreeCredit - 1));
+        }
+      }
+      else if (service === "perplexity" && !user?.pplxKeyEnable) {
+        toast.warn("Please input your perplexity key.");
+        homeDispatch({ field: "isPplxKeyDialogOpen", value: true });
+        return;
+      }
+      else if (service === "gemini" && !user?.geminiKeyEnable) {
+        toast.warn("Please input your google gemini key.");
+        homeDispatch({ field: "isGeminiKeyDialogOpen", value: true });
+        return;
+      }
+    }
+
     if (messageIsStreaming) {
       return;
     }
@@ -396,3 +435,7 @@ export const ChatInput = ({
     </div>
   );
 };
+function setUser(arg0: any) {
+  throw new Error('Function not implemented.');
+}
+

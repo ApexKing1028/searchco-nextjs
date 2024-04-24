@@ -36,6 +36,7 @@ export const PplxKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => {
                     await updateDoc(doc.ref, { pplxKey: key });
                 }
                 toast.success("Your perplexity key was saved successfully.")
+                setUser({ ...user, pplxKeyEnable: true });
             }
             catch (error) {
                 let message = (error as Error).message;

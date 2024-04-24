@@ -39,18 +39,14 @@ export const NameDialog: FC<NameDialogProps> = ({ open, onClose }) => {
                             openaiKey: "",
                             pplxKey: "",
                             geminiKey: "",
-                            openaiCredit: 10,
-                            pplxCredit: 10,
-                            geminiCredit: 10,
+                            freeCredit: 10,
                             role: "user",
                         });
 
                     dispatch({ field: "isNameDialogOpen", value: false });
                     setUser({
-                        uid: user.uid,
-                        email: user.email,
-                        name,
-                        role: "user"
+                        ...user,
+                        name
                     })
                     toast.success("profile was created successfully.")
                 }

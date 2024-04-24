@@ -36,6 +36,7 @@ export interface HomeInitialState {
   isPplxKeyDialogOpen: boolean;
   isGeminiKeyDialogOpen: boolean;
   isKeysDialogOpen: boolean;
+  service: string;
 }
 
 export const initialState: HomeInitialState = {
@@ -68,5 +69,6 @@ export const initialState: HomeInitialState = {
   isOpenaiKeyDialogOpen: false,
   isPplxKeyDialogOpen: false,
   isGeminiKeyDialogOpen: false,
-  isKeysDialogOpen: false
+  isKeysDialogOpen: false,
+  service: "chatgpt"
 };

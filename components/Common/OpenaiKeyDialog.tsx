@@ -36,6 +36,7 @@ export const OpenaiKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => 
                     await updateDoc(doc.ref, { openaiKey: key });
                 }
                 toast.success("Your openai key was saved successfully.")
+                setUser({ ...user, openaiKeyEnable: true });
             }
             catch (error) {
                 let message = (error as Error).message;

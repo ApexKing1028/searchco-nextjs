@@ -33,6 +33,9 @@ import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
+import { collection, DocumentData, DocumentReference, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
+import { useAuth } from '@/context/authContext';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -53,6 +56,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
       modelError,
       loading,
       prompts,
+      service
     },
     handleUpdateConversation,
     dispatch: homeDispatch,
@@ -67,6 +71,24 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const { user } = useAuth();
+
+  const disCountFreeCredit = async () => {
+    const q = query(collection(db, "users"), where("email", "==", user.email));
+    try {
+      const querySnapshot = await getDocs(q);
+      for (const doc of querySnapshot.docs) {
+        let dt = doc.data();
+        await updateDoc(doc.ref, { freeCredit: dt.freeCredit - 1 });
+      }
+      toast.success("Keys are saved successfully.")
+    }
+    catch (error) {
+      let message = (error as Error).message;
+      console.log(message);
+    }
+  }
 
   const handleSend = useCallback(
     async (message: Message, deleteCount = 0, plugin: Plugin | null = null) => {
@@ -96,7 +118,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
         const chatBody: ChatBody = {
           model: updatedConversation.model,
           messages: updatedConversation.messages,
-          key: apiKey,
+          key: user?.openaiKeyEnable ? user?.openaiKey : process.env.OPENAI_API_KEY,
           prompt: updatedConversation.prompt,
           temperature: updatedConversation.temperature,
         };
@@ -214,18 +236,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           homeDispatch({ field: 'messageIsStreaming', value: false });
         } else {
           const { answer } = await response.json();
-          console.log(answer)
-
-          const updatedMessages: Message[] =
-            updatedConversation.messages.map((message, index) => {
-              if (index === updatedConversation.messages.length - 1) {
-                return {
-                  ...message,
-                  content: answer,
-                };
-              }
-              return message;
-            });
+          const updatedMessages: Message[] = [
+            ...updatedConversation.messages,
+            { role: 'assistant', content: answer },
+          ];
           updatedConversation = {
             ...updatedConversation,
             messages: updatedMessages,
@@ -250,6 +264,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           saveConversations(updatedConversations);
           homeDispatch({ field: 'loading', value: false });
           homeDispatch({ field: 'messageIsStreaming', value: false });
+          if (user && service === "chatgpt" && !user.openaiKeyEnable) {
+            disCountFreeCredit();
+          }
         }
       }
     },
@@ -314,14 +331,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     }
   };
   const throttledScrollDown = throttle(scrollDown, 250);
-
-  // useEffect(() => {
-  //   console.log('currentMessage', currentMessage);
-  //   if (currentMessage) {
-  //     handleSend(currentMessage);
-  //     homeDispatch({ field: 'currentMessage', value: undefined });
-  //   }
-  // }, [currentMessage]);
 
   useEffect(() => {
     throttledScrollDown();

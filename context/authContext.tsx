@@ -30,8 +30,16 @@ export const AuthContextProvider = ({
                         setUser({
                             uid: user.uid,
                             email: user.email,
-                            role: "user"
+                            role: "user",
+                            freeCredit: 10,
+                            openaiKey: "",
+                            pplxKey: "",
+                            geminiKey: "",
+                            openaiKeyEnable: false,
+                            pplxKeyEnable: false,
+                            geminiKeyEnable: false
                         })
+                        localStorage.setItem("afterSignUpFreeCredit", "10")
                     }
                     else {
                         for (const doc of querySnapshot.docs) {
@@ -40,8 +48,16 @@ export const AuthContextProvider = ({
                                 uid: user.uid,
                                 email: user.email,
                                 name: dt.name,
-                                role: dt.role
+                                role: dt.role,
+                                freeCredit: dt.freeCredit,
+                                openaiKey: dt.openaiKey,
+                                pplxKey: dt.pplxKey,
+                                geminiKey: dt.geminiKey,
+                                openaiKeyEnable: dt.openaiKey === "" ? false : true,
+                                pplxKeyEnable: dt.pplxKey === "" ? false : true,
+                                geminiKeyEnable: dt.geminiKey === "" ? false : true,
                             })
+                            localStorage.setItem("afterSignUpFreeCredit", String(10));
                         }
                     }
                 }

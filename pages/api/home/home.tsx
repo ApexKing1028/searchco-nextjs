@@ -420,6 +420,9 @@ const Home = ({
       }
       fetchPromptsData();
     }
+    else {
+      if (!localStorage.getItem("beforeSignUpFreeCredit")) localStorage.setItem("beforeSignUpFreeCredit", "10");
+    }
 
     const settings = getSettings();
     if (settings.theme) {
