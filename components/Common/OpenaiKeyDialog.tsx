@@ -22,40 +22,43 @@ export const OpenaiKeyDialog: FC<OpenaiKeyDialogProps> = ({ open, onClose }) => 
             toast.warn("Please input OpenAI key.");
             return;
         }
-
-        const body = JSON.stringify({
-            type: "chatgpt",
-            key
-        });
-        const controller = new AbortController();
-        const response = await fetch("/api/test", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            signal: controller.signal,
-            body,
-        });
-        if (!response.ok) {
-            toast.error(response.statusText);
-            return;
-        }
-
         try {
-            setIsSaving(true);
-            const q = query(collection(db, "users"), where("email", "==", user.email));
-            try {
-                const querySnapshot = await getDocs(q);
-
-                for (const doc of querySnapshot.docs) {
-                    await updateDoc(doc.ref, { openaiKey: key });
-                }
-                toast.success("Your OpenAI key was saved successfully.")
-                setUser({ ...user, openaiKeyEnable: true, openaiKey: key });
+            const body = JSON.stringify({
+                type: "chatgpt",
+                key
+            });
+            const controller = new AbortController();
+            const response = await fetch("/api/test", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                signal: controller.signal,
+                body,
+            });
+            if (!response.ok) {
+                toast.error(response.statusText);
+                return;
             }
-            catch (error) {
-                let message = (error as Error).message;
-                console.log(message);
+
+            try {
+                setIsSaving(true);
+                const q = query(collection(db, "users"), where("email", "==", user.email));
+                try {
+                    const querySnapshot = await getDocs(q);
+
+                    for (const doc of querySnapshot.docs) {
+                        await updateDoc(doc.ref, { openaiKey: key });
+                    }
+                    toast.success("Your OpenAI key was saved successfully.")
+                    setUser({ ...user, openaiKeyEnable: true, openaiKey: key });
+                }
+                catch (error) {
+                    let message = (error as Error).message;
+                    console.log(message);
+                }
+            } catch (error) {
+                console.error(error);
             }
         } catch (error) {
             console.error(error);
