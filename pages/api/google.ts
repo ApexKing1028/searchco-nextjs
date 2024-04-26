@@ -19,10 +19,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const query = encodeURIComponent(userMessage.content.trim());
 
     const googleRes = await fetch(
-      `https://customsearch.googleapis.com/customsearch/v1?key=${
-        googleAPIKey ? googleAPIKey : process.env.GOOGLE_API_KEY
-      }&cx=${
-        googleCSEId ? googleCSEId : process.env.GOOGLE_CSE_ID
+      `https://customsearch.googleapis.com/customsearch/v1?key=${googleAPIKey ? googleAPIKey : process.env.GOOGLE_API_KEY
+      }&cx=${googleCSEId ? googleCSEId : process.env.GOOGLE_CSE_ID
       }&q=${query}&num=5`,
     );
 
@@ -85,7 +83,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const filteredSources: GoogleSource[] = sourcesWithText.filter(Boolean);
 
     const answerPrompt = endent`
-    Provide me with the information I requested. Use the sources to provide an accurate response. Respond in markdown format. Cite the sources you used as a markdown link as you use them at the end of each sentence by number of the source (ex: [[1]](link.com)). Provide an accurate response and then stop. Today's date is ${new Date().toLocaleDateString()}.
+    Provide me with the information I requested. I have provided 5 data sources. Make response for each question.
+    Use the sources to provide an accurate response. Respond in markdown format. Cite the sources you used as a markdown link as you use them at the end of each sentence by number of the source (ex: [[link.com]](link.com)). 
+    Provide an accurate response and then stop. Today's date is ${new Date().toLocaleDateString()}.
 
     Example Input:
     What's the weather in San Francisco today?
@@ -94,10 +94,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     [Weather in San Francisco](https://www.google.com/search?q=weather+san+francisco)
 
     Example Response:
-    It's 70 degrees and sunny in San Francisco today. [[1]](https://www.google.com/search?q=weather+san+francisco)
+    It's 70 degrees and sunny in San Francisco today. [https://www.google.com/search?q=weather+san+francisco](https://www.google.com/search?q=weather+san+francisco)
 
     Input:
-    ${userMessage.content.trim()}
+    ${userMessage.content.trim()} 
 
     Sources:
     ${filteredSources.map((source) => {
@@ -126,7 +126,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
         messages: [
           {
             role: 'system',
-            content: `Use the sources to provide an accurate response. Respond in markdown format. Cite the sources you used as [1](link), etc, as you use them. Maximum 4 sentences.`,
+            content: `Use the sources to provide an accurate response. Respond in markdown format. Cite the sources you used as [link](link), etc, as you use them. I will provide 5 data sources. Please make respose for each thing. Maximum 4 sentences for each thing.`,
           },
           answerMessage,
         ],
@@ -142,7 +142,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     res.status(200).json({ answer });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error'})
+    res.status(500).json({ error: 'Error' })
   }
 };
 
