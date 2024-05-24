@@ -17,8 +17,8 @@ export function Chat({ id }: ChatProps) {
   const [aiState] = useAIState()
 
   useEffect(() => {
-    if (!path.includes('search') && messages.length === 1) {
-      window.history.replaceState({}, '', `/search/${id}`)
+    if (!path.includes('searches') && messages.length === 1) {
+      window.history.replaceState({}, '', `/google-search/searches/${id}`)
     }
   }, [id, path, messages])
 

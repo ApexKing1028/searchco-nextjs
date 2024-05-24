@@ -75,7 +75,7 @@ export function ChatPanel({ messages }: ChatPanelProps) {
   // If there are messages and the new button has not been pressed, display the new Button
   if (messages.length > 0 && !isButtonPressed) {
     return (
-      <div className="fixed bottom-2 md:bottom-8 left-0 right-0 flex justify-center items-center mx-auto pointer-events-none">
+      <div className="fixed bottom-2 md:bottom-[70px] left-0 right-0 flex justify-center items-center mx-auto pointer-events-none">
         <Button
           type="button"
           variant={'secondary'}

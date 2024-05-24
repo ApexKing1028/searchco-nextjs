@@ -271,7 +271,7 @@ export const AI = createAI<AIState, UIState>({
     const { chatId, messages } = state
     const createdAt = new Date()
     const userId = 'anonymous'
-    const path = `/search/${chatId}`
+    const path = `/google-search/searches/${chatId}`
     const title =
       messages.length > 0
         ? JSON.parse(messages[0].content)?.input?.substring(0, 100) ||
