@@ -25,13 +25,13 @@ export function History({ location, chats }: HistoryProps) {
           variant="ghost"
           size="icon"
           className={cn({
-            'rounded-full text-foreground/30': location === 'sidebar'
+            'rounded-full text-foreground/30 dark:bg-[#2b3444] hover:dark:bg-[#282c32]': location === 'sidebar'
           })}
         >
-          {location === 'header' ? <Menu /> : <ChevronLeft size={16} />}
+          {location === 'header' ? <Menu /> : <ChevronLeft size={26} />}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-64 rounded-tl-xl rounded-bl-xl">
+      <SheetContent className="w-64 dark:bg-[#2b3444] border-none">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-1 text-sm font-normal mb-2">
             <HistoryIcon size={14} />

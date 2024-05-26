@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link";
-import { auth } from "@/config/firebase";
 
 import {
     GoogleAuthProvider,
@@ -14,6 +13,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { Oval } from 'react-loader-spinner'
 import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth'
+import { auth } from "@/config/firebase";
 
 const SigninPage = () => {
     const [authing, setAuthing] = useState(false);

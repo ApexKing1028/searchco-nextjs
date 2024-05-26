@@ -26,12 +26,8 @@ export default async function SearchPage({ params }: SearchPageProps) {
     redirect('/')
   }
 
-  if (chat?.userId !== userId) {
-    notFound()
-  }
-
   return (
-    <AI initialAIState={{ chatId: chat.id, messages: chat.messages }}>
+    <AI initialAIState={{ chatId: chat.id, messages: chat.messages, userId: "ananymous" }}>
       <Chat id={params.id} />
     </AI>
   )

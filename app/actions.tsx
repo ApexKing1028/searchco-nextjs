@@ -64,10 +64,13 @@ async function submit(formData?: FormData, skip?: boolean) {
         ? 'input_related'
         : 'inquiry'
 
+  const userId = formData?.get("userId") as string;
+
   // Add the user message to the state
   if (content) {
     aiState.update({
       ...aiState.get(),
+      userId: userId,
       messages: [
         ...aiState.get().messages,
         {
@@ -84,7 +87,7 @@ async function submit(formData?: FormData, skip?: boolean) {
     })
   }
 
-  async function processEvents() {
+  async function processEvents(userId) {
     let action: any = { object: { next: 'proceed' } }
     // If the user skips the task, we proceed to the search
     if (!skip) action = (await taskManager(messages)) ?? action
@@ -95,8 +98,10 @@ async function submit(formData?: FormData, skip?: boolean) {
       uiStream.done()
       isGenerating.done()
       isCollapsed.done(false)
+
       aiState.done({
         ...aiState.get(),
+        userId: userId,
         messages: [
           ...aiState.get().messages,
           {
@@ -141,6 +146,7 @@ async function submit(formData?: FormData, skip?: boolean) {
         toolOutputs.map(output => {
           aiState.update({
             ...aiState.get(),
+            userId: userId,
             messages: [
               ...aiState.get().messages,
               {
@@ -190,6 +196,7 @@ async function submit(formData?: FormData, skip?: boolean) {
 
       aiState.done({
         ...aiState.get(),
+        userId: userId,
         messages: [
           ...aiState.get().messages,
           {
@@ -218,7 +225,7 @@ async function submit(formData?: FormData, skip?: boolean) {
     uiStream.done()
   }
 
-  processEvents()
+  processEvents(userId)
 
   return {
     id: nanoid(),
@@ -230,7 +237,8 @@ async function submit(formData?: FormData, skip?: boolean) {
 
 export type AIState = {
   messages: AIMessage[]
-  chatId: string
+  chatId: string,
+  userId: string
 }
 
 export type UIState = {
@@ -242,7 +250,8 @@ export type UIState = {
 
 const initialAIState: AIState = {
   chatId: nanoid(),
-  messages: []
+  messages: [],
+  userId: "anonymous"
 }
 
 const initialUIState: UIState = []
@@ -268,9 +277,9 @@ export const AI = createAI<AIState, UIState>({
   unstable_onSetAIState: async ({ state, done }) => {
     'use server'
 
-    const { chatId, messages } = state
+    const { chatId, messages, userId } = state
+
     const createdAt = new Date()
-    const userId = 'anonymous'
     const path = `/google-search/searches/${chatId}`
     const title =
       messages.length > 0
@@ -291,11 +300,12 @@ export const AI = createAI<AIState, UIState>({
     const chat: Chat = {
       id: chatId,
       createdAt,
-      userId,
+      userId: userId ? userId : "anonymous",
       path,
       title,
       messages: updatedMessages
     }
+
     await saveChat(chat)
   }
 })

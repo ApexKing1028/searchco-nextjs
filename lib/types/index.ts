@@ -21,18 +21,18 @@ export interface Chat extends Record<string, any> {
 }
 
 export type AIMessage = {
-  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
+  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool',
   content: string
   id: string
   name?: string
   type?:
-    | 'answer'
-    | 'related'
-    | 'skip'
-    | 'inquiry'
-    | 'input'
-    | 'input_related'
-    | 'tool'
-    | 'followup'
-    | 'end'
+  | 'answer'
+  | 'related'
+  | 'skip'
+  | 'inquiry'
+  | 'input'
+  | 'input_related'
+  | 'tool'
+  | 'followup'
+  | 'end'
 }

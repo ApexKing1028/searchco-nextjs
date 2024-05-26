@@ -43,6 +43,7 @@ export async function getChat(id: string, userId: string = 'anonymous') {
 
 export async function saveChat(chat: Chat, userId: string = 'anonymous') {
   const pipeline = redis.pipeline()
+  console.log("chat:", chat);
   pipeline.hmset(`chat:${chat.id}`, chat)
   pipeline.zadd(`user:chat:${chat.userId}`, {
     score: Date.now(),

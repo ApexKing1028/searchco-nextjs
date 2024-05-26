@@ -1,17 +1,27 @@
-import { cache } from 'react'
-import { History } from './history'
-import { getChats } from '@/lib/actions/chat'
+"use client";
 
-const loadChats = cache(async (userId?: string) => {
-  return await getChats(userId)
-})
+import { useEffect, useState } from 'react';
+import { History } from './history';
+import { getChats } from '@/lib/actions/chat';
+import { useAuth } from '@/contexts/authContext';
 
-export async function Sidebar() {
-  const chats = await loadChats('anonymous')
-  console.log('history loaded')
+export default function Sidebar() {
+  const { user } = useAuth();
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      if (user) {
+        const loadedChats = await getChats(user.uid);
+        setChats(loadedChats);
+      }
+    };
+    fetchChats();
+  }, [user]);
+
   return (
     <div className="h-screen p-2 fixed top-0 right-0 flex-col justify-center pb-24 hidden sm:flex">
       <History location="sidebar" chats={chats} />
     </div>
-  )
+  );
 }

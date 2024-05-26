@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState, useRef, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import type { AI, UIState } from '@/app/actions'
@@ -9,7 +10,8 @@ import { Button } from './ui/button'
 import { ArrowRight, Plus } from 'lucide-react'
 import { EmptyScreen } from './empty-screen'
 import { nanoid } from 'ai'
-import HomeContext from '@/contexts/homeContext'
+import { useAuth } from '@/contexts/authContext'
+import HomeContext from '@/contexts/homeContext';
 
 interface ChatPanelProps {
   messages: UIState
@@ -22,12 +24,14 @@ export function ChatPanel({ messages }: ChatPanelProps) {
   const [isButtonPressed, setIsButtonPressed] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [showEmptyScreen, setShowEmptyScreen] = useState(false)
+  const { user } = useAuth();
   const router = useRouter()
 
   const {
     state: {
       isFullScreen
     },
+    dispatch: homeDispatch,
   } = useContext(HomeContext);
 
   // Focus on input when button is pressed
@@ -57,7 +61,9 @@ export function ChatPanel({ messages }: ChatPanelProps) {
     ])
 
     // Submit and get response message
-    const formData = new FormData(e.currentTarget)
+    let formData = new FormData(e.currentTarget)
+    formData.append('userId', user ? user.uid : 'anonymous');
+
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [...currentMessages, responseMessage as any])
   }
@@ -75,7 +81,7 @@ export function ChatPanel({ messages }: ChatPanelProps) {
   // If there are messages and the new button has not been pressed, display the new Button
   if (messages.length > 0 && !isButtonPressed) {
     return (
-      <div className="fixed bottom-2 md:bottom-[70px] left-0 right-0 flex justify-center items-center mx-auto pointer-events-none">
+      <div className="fixed bottom-2 md:bottom-[80px] left-0 right-0 flex justify-center items-center mx-auto pointer-events-none">
         <Button
           type="button"
           variant={'secondary'}
@@ -93,18 +99,17 @@ export function ChatPanel({ messages }: ChatPanelProps) {
 
   return (
     <div
-      className={`fixed bottom-8 ${isFullScreen ? "left-0" : "left-64"} right-0 mx-auto h-screen flex flex-col items-center justify-center`}
-      style={{ height: isFullScreen ? "calc(100vh - 100px)" : "calc(100vh - 280px)" }}
+      className={`fixed bottom-8 left-0 right-0 top-10 mx-auto h-screen flex flex-col items-center justify-center ${isFullScreen ? "left-0" : "left-64"}`}
     >
       <form onSubmit={handleSubmit} className="max-w-2xl w-full px-6">
         <div className="relative flex items-center w-full">
-          <input
+          <Input
             ref={inputRef}
             type="text"
             name="input"
-            placeholder="Ask a question..."
+            placeholder="Please ask a question to me."
             value={input}
-            className="pl-4 pr-10 outline-none h-12 rounded-full dark:text-body-color-dark dark:shadow-two w-full border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
+            className="pl-4 pr-10 h-12 rounded-[10px] bg-muted dark:bg-[#282c32] focus:outline-non rounded-full text-[18px]"
             onChange={e => {
               setInput(e.target.value)
               setShowEmptyScreen(e.target.value.length === 0)
@@ -112,6 +117,7 @@ export function ChatPanel({ messages }: ChatPanelProps) {
             onFocus={() => setShowEmptyScreen(true)}
             onBlur={() => setShowEmptyScreen(false)}
           />
+          <input name="userId" type="hidden" value={user ? user.uid : 'anonymous'} />
           <Button
             type="submit"
             size={'icon'}
@@ -129,6 +135,6 @@ export function ChatPanel({ messages }: ChatPanelProps) {
           className={cn(showEmptyScreen ? 'visible' : 'invisible')}
         />
       </form>
-    </ div >
+    </div >
   )
 }
