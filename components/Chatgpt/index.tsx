@@ -114,8 +114,8 @@ const Page = () => {
                     ref={messagesEndRef}
                 />
             </div>
-
             <ChatInput
+                length={messages?.length || 0}
                 textareaRef={textareaRef}
                 input={input}
                 handleInputChange={handleInputChange}

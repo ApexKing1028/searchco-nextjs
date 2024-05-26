@@ -309,7 +309,7 @@ const DashboardLayout = ({
             </div>
         </aside>}
 
-        <div className={`${isFullScreen ? "sm:ml-0 pt-[10px]" : "sm:ml-64 pt-[95px]"} bg-[#f8f8f8] min-h-screen dark:bg-[#1d2430] relative`}>
+        <div className={`${isFullScreen ? "sm:ml-0 pt-[10px]" : "sm:ml-64 pt-[91px]"} bg-[#f8f8f8] min-h-screen dark:bg-[#1d2430] relative`}>
             <div className='w-full' >
                 {children}
             </div>
