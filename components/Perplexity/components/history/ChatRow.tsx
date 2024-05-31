@@ -42,7 +42,7 @@ const ChatRow: React.FC<Props> = ({ id, onClickChat }) => {
 
     return (
         <>
-            <Link href={`/chatgpt/chat/${id}`} onClick={onClickChat} className={`chatRow justify-center hover:bg-gray-500/10 ${active && 'bg-gray-500/10 dark:bg-gray-700/50'}`}>
+            <Link href={`/perplexity/chat/${id}`} onClick={onClickChat} className={`chatRow justify-center hover:bg-gray-500/10 ${active && 'bg-gray-500/10 dark:bg-gray-700/50'}`}>
                 <ChatBubbleLeftIcon className='h-5 w-5' />
                 <p className='flex-1 truncate'>
                     {data?.docs.length && data?.docs[data.docs.length - 1]?.data().content || 'New Search'}
