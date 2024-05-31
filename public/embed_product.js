@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         initializeChatbot(chatbotId, domain);
         if (currentDomain !== domain) {
+
         }
     } else {
         console.error('Chatbot configuration is missing!');
@@ -30,10 +31,9 @@ function initializeChatbot(chatbotId, domain) {
     chatIframe.id = 'chatbase-bubble-window';
     chatIframe.setAttribute('scrolling', 'yes');
     chatIframe.setAttribute('title', 'Chatbot');
-    chatIframe.src = chatbotAPI
-    chatIframe.style.cssText = 'border: 1px solid #dddddd; position: fixed; bottom: 5rem; right: 1rem; width: 448px; height: 85vh; max-height: 824px; border-radius: 0.75rem; display: none; z-index: 2147483646; overflow: hidden;';
-
-    document.body.appendChild(openButton);
+    chatIframe.src = chatbotAPI;
+    chatIframe.style.cssText = 'border: 1px solid #dddddd; position: fixed; bottom: 5rem; right: 1rem; width: 448px; height: 85vh; max-height: 824px; border-radius: 0.75rem; display: none; z-index: 2147483646; overflow: hidden; transition: all 0.5s ease-in-out; transform: scale(0); transform-origin: bottom right;';
+        document.body.appendChild(openButton);
     document.body.appendChild(closeButton);
     document.body.appendChild(chatIframe);
 
@@ -41,12 +41,20 @@ function initializeChatbot(chatbotId, domain) {
         chatIframe.style.display = 'block';
         openButton.style.display = 'none';
         closeButton.style.display = 'block';
+        setTimeout(() => {
+            chatIframe.style.opacity = '1';
+            chatIframe.style.transform = 'scale(1)';
+        }, 50);
     }
-
+    
     function closeChat() {
-        chatIframe.style.display = 'none';
-        closeButton.style.display = 'none';
+        chatIframe.style.opacity = '0';
+        chatIframe.style.transform = 'scale(0)'; 
         openButton.style.display = 'block';
+        closeButton.style.display = 'none';
+        setTimeout(() => {
+            chatIframe.style.display = 'none';
+        }, 500); 
     }
 
     openButton.addEventListener('click', openChat);

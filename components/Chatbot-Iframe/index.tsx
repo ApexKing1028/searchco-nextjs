@@ -18,14 +18,14 @@ const MessageBubble = ({ children, backgroundColor = '#f1f1f0', textColor = 'bla
     <>
         {role === "assistant" ?
             <div className="flex justify-start" >
-                <div className="mb-3 max-w-prose overflow-auto rounded-lg px-4 py-3" style={{ backgroundColor: "#f1f1f0" }}>
+                <div className="mb-3 max-w-[85%] overflow-auto rounded-lg px-4 py-3" style={{ backgroundColor: "#f1f1f0" }}>
                     <div className="flex flex-col items-start gap-4">
-                        <div className="prose break-words text-left text-[#000000]">{children}</div>
+                        <div className="prose break-words text-left text-[#000000]">{text === "" ? children : <Markdown>{text}</Markdown>}</div>
                     </div>
                 </div>
             </div> :
             <div className="flex justify-end" >
-                <div className="mb-3 max-w-prose overflow-auto rounded-lg px-4 py-3" style={{ backgroundColor: "rgb(59, 129, 246)" }}>
+                <div className="mb-3 max-w-[85%] overflow-auto rounded-lg px-4 py-3" style={{ backgroundColor: "rgb(59, 129, 246)" }}>
                     <div className="flex flex-col items-start gap-4">
                         <div className="prose break-words text-left text-[#ffffff]">{text === "" ? children : <Markdown>{text}</Markdown>}</div>
                     </div>
@@ -281,7 +281,7 @@ const ChatbotIframePage = ({
         <div className="h-screen max-h-[100vh] bg-[#ffffff]" title="Chatbot">
             <div className="flex h-full flex-col overflow-hidden">
                 <Header />
-                <div className="flex-grow overflow-auto my-[20px] w-full px-4">
+                <div className="flex-grow overflow-auto my-[20px] w-full px-4 custom-scrollbar">
                     {messages.map((msg, index) => (
                         <MessageBubble key={index} role={msg.role} text={msg.text} >
                             <p>{msg.text}</p>
@@ -292,6 +292,8 @@ const ChatbotIframePage = ({
                             <BeatLoader color="#888888" />
                         </div>
                     </MessageBubble>}
+                    <div ref={messagesEndRef} className="h-[5px]">
+                    </div>
                 </div>
                 <div className="bg-inherit">
                     <form onSubmit={handleSubmit}
@@ -303,7 +305,7 @@ const ChatbotIframePage = ({
                                     ref={textareaRef}
                                     required
                                     maxLength={4000}
-                                    rows={1}
+                                    rows={2}
                                     tabIndex={0}
                                     className="mr-3 message-scrollbar max-h-36 text-black w-full resize-none bg-transparent pr-3 leading-[24px] focus:outline-none focus:ring-0 focus-visible:ring-0 group-[.cb-dark]:text-white group-[.cb-light]:text-black"
                                     placeholder="Message..."
@@ -346,8 +348,8 @@ const ChatbotIframePage = ({
                             </div>
                         </div>
                         <div className="flex items-center justify-center gap-3 px-4 pb-3 pt-1">
-                            <p className="grow text-nowrap text-center text-xs group-[.cb-dark]:text-[#b4b4b5] group-[.cb-light]:text-[#3f3f46]">
-                                Powed By Search.co <a target="_blank" className="ml-1 font-semibold group-[.cb-dark]:text-[#f1f1f0] group-[.cb-light]:text-[#141410]" href="https://search.co">Search.co</a>
+                            <p className="grow text-nowrap text-center text-xs text-[#b4b4b5] group-[.cb-light]:text-[#3f3f46]">
+                                Powed By <a target="_blank" className="ml-1 font-semibold group-[.cb-dark]:text-[#f1f1f0] group-[.cb-light]:text-[#141410]" href="https://search.co">Search.co</a>
                             </p>
                         </div>
                     </form>
