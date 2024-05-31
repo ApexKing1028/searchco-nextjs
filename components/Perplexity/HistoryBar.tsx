@@ -15,7 +15,7 @@ const ChatBar = () => {
 
     const [data, loading, error] = useCollection(
         user && query(
-            collection(db, 'history', user?.email!, 'chatgpt'),
+            collection(db, 'history', user?.email!, 'perplexity'),
             orderBy('createdAt', 'asc')
         )
     )

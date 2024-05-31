@@ -18,7 +18,7 @@ import { db } from '@/config/firebase';
 import { useAuth } from '@/contexts/authContext';
 
 const options = {
-    api: "/api/chatgpt/chat"
+    api: "/api/perplexity/chat"
 };
 
 type MainBarProps = {
@@ -102,7 +102,7 @@ const MainBar = ({ chatId }: MainBarProps) => {
         if (!isLoading && user) {
             const addChatMessage = async () => {
                 const lastTwoMessages = messages.slice(-2);
-                const messagesCollectionRef = collection(db, 'history', user?.email!, 'chatgpt', chatId, 'messages');
+                const messagesCollectionRef = collection(db, 'history', user?.email!, 'perplexity', chatId, 'messages');
 
                 for (const message of lastTwoMessages) {
                     await addDoc(messagesCollectionRef, message);
@@ -115,7 +115,7 @@ const MainBar = ({ chatId }: MainBarProps) => {
     useEffect(() => {
         if (user) {
             const fetchMessageData = async () => {
-                const messagesCollectionRef = collection(db, 'history', user?.email!, 'chatgpt', chatId, 'messages');
+                const messagesCollectionRef = collection(db, 'history', user?.email!, 'perplexity', chatId, 'messages');
                 const q = query(messagesCollectionRef, orderBy('createdAt', 'asc')); // or 'desc' for descending
 
                 try {

@@ -21,7 +21,7 @@ const NewChat: React.FC<Props> = ({ onNewChat }) => {
 
     const createNewChat = async (e: any) => {
         const doc = await addDoc(
-            collection(db, 'history', user?.email!, 'chatgpt'), {
+            collection(db, 'history', user?.email!, 'perplexity'), {
             userId: user?.email!,
             createdAt: serverTimestamp()
         }
@@ -30,7 +30,7 @@ const NewChat: React.FC<Props> = ({ onNewChat }) => {
         onNewChat(e)
         dispatch({ field: "prompt", value: "" })
 
-        router.push(`/chatgpt/chat/${doc.id}`)
+        router.push(`/perplexity/chat/${doc.id}`)
     }
 
     return (

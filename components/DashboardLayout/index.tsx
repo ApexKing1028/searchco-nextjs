@@ -472,12 +472,12 @@ const DashboardLayout = ({
             }}
         />
 
-        {/* <PromptModal
+        <PromptModal
             prompt={promptModalData}
             open={isPromptDialogOpen}
             onClose={() => homeDispatch({ field: "isPromptDialogOpen", value: false })}
             onUpdatePrompt={handleUpdate}
-        /> */}
+        />
 
         <SharedPromptViewDialog
             open={isSharedPromptViewDialogOpen}

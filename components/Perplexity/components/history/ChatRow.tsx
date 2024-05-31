@@ -22,7 +22,7 @@ const ChatRow: React.FC<Props> = ({ id, onClickChat }) => {
 
     const [data] = useCollection(
         user && query(
-            collection(db, 'history', user?.email!, 'chatgpt', id, 'messages'),
+            collection(db, 'history', user?.email!, 'perplexity', id, 'messages'),
             orderBy('createdAt', 'asc')
         )
     )
@@ -34,10 +34,10 @@ const ChatRow: React.FC<Props> = ({ id, onClickChat }) => {
     }, [pathname])
 
     const removeChat = async () => {
-        await deleteDoc(doc(db, 'history', user?.email!, 'chatgpt', id))
+        await deleteDoc(doc(db, 'history', user?.email!, 'perplexity', id))
         // @ts-ignored
         onClickChat()
-        router.replace('/chatgpt')
+        router.replace('/perplexity')
     }
 
     return (
