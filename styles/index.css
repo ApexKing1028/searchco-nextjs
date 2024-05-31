@@ -92,6 +92,19 @@
   input#checkboxLabel:checked~.box span {
     @apply opacity-100;
   }
+
+  .infoText {
+    /* @apply p-4 bg-gray-700/50 rounded-lg max-w-[300px] */
+    @apply p-4 bg-gray-200 dark:bg-gray-700/50 rounded-lg max-w-[300px]
+  }
+
+  .chatRow {
+    @apply rounded-lg px-5 py-3 text-sm flex items-center justify-center space-x-2 hover:bg-gray-700/70 cursor-pointer transition-all duration-200 ease-out
+  }
+
+  .btn {
+    @apply normal-case
+  }
 }
 
 
@@ -164,4 +177,40 @@
   background-color: #888;
   border-radius: 5px;
   border: 0.1px solid #555555;
+}
+
+/* Chat Scrollbar */
+.chat-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.chat-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chat-scrollbar::-webkit-scrollbar-track {
+  background: #555555;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 15px;
+  border: 0.1px solid #555555;
+}
+
+.chat-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+:root {
+  --loader-color-light: #000000;
+  --loader-color-dark: #ffffff;
+}
+
+[data-theme="light"] {
+  --loader-color: var(--loader-color-light);
+}
+
+[data-theme="dark"] {
+  --loader-color: var(--loader-color-dark);
 }

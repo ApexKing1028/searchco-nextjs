@@ -114,14 +114,14 @@ const Footer = () => {
                       Document
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link
                       href="/apidocs"
                       className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
                     >
                       API Document
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link
                       href="/contact"

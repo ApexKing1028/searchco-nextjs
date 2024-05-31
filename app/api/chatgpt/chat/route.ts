@@ -10,12 +10,27 @@ const client = new OpenAI({
 });
 
 export async function POST(req: Request) {
-    const { messages } = await req.json();
+    const reqBody = await req.json();
+    const model = reqBody.data.model;
+
+    let gptModel = 'gpt-3.5-turbo'
+
+    switch (model) {
+        case "GPT-3.5":
+            gptModel = 'gpt-3.5-turbo';
+            break;
+        case "GPT-4":
+            gptModel = 'gpt-4-turbo';
+            break;
+        case "GPT-4o":
+            gptModel = 'gpt-4o';
+            break;
+    }
 
     const response = await client.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: gptModel,
         stream: true,
-        messages: messages,
+        messages: reqBody.messages,
     });
 
     const stream = OpenAIStream(response);

@@ -1,6 +1,11 @@
+"use client";
 import Link from "next/link";
+import { useAuth } from "@/contexts/authContext";
+import { useEffect } from "react";
 
 const Hero = () => {
+  const { user } = useAuth();
+
   return (
     <>
       <section
@@ -19,10 +24,10 @@ const Hero = () => {
                 </p>
                 <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
                   <Link
-                    href="/signin"
+                    href={` ${user ? "/" : "/signin"}`}
                     className="rounded-md bg-primary px-8 py-4 text-base font-semibold text-white duration-300 ease-in-out hover:bg-primary/80"
                   >
-                    Get Started
+                    {user ? "Go To Dashboard" : "Get Started"}
                   </Link>
                 </div>
               </div>

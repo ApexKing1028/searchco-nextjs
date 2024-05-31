@@ -1,20 +1,15 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+
 import {
     onAuthStateChanged,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
 } from 'firebase/auth'
 import { auth, db } from '@/config/firebase'
 import { collection, getDocs, query, where } from 'firebase/firestore'
-import { useRouter } from 'next/navigation'
+
 import SpinPage from '@/components/Spin'
-import DashboardLayout from '@/components/DashboardLayout'
-
-import { usePathname } from 'next/navigation'
-
 const AuthContext = createContext<any>({})
-
 export const useAuth = () => useContext(AuthContext)
 
 export const AuthContextProvider = ({
@@ -41,6 +36,7 @@ export const AuthContextProvider = ({
                         setUser({
                             uid: user.uid,
                             email: user.email,
+                            userid: "",
                             role: "user",
                             freeCredit: 10,
                             openaiKey: "",
@@ -48,15 +44,15 @@ export const AuthContextProvider = ({
                             geminiKey: "",
                             openaiKeyEnable: false,
                             pplxKeyEnable: false,
-                            geminiKeyEnable: false
+                            geminiKeyEnable: false,
                         })
                     }
                     else {
                         for (const doc of querySnapshot.docs) {
                             let dt = doc.data();
                             setUser({
-                                uid: user.uid,
-                                email: user.email,
+                                uid: user?.uid,
+                                email: user?.email,
                                 userid: dt.userid,
                                 role: dt.role,
                                 freeCredit: dt.freeCredit,
@@ -83,21 +79,8 @@ export const AuthContextProvider = ({
         return () => unsubscribe()
     }, [router])
 
-    const signup = (email: string, password: string) => {
-        return createUserWithEmailAndPassword(auth, email, password)
-    }
-
-    const login = (email: string, password: string) => {
-        return signInWithEmailAndPassword(auth, email, password)
-    }
-
-    const logout = async () => {
-        setUser(null)
-        await signOut(auth)
-    }
-
     return (
-        <AuthContext.Provider value={{ user, setUser, login, signup, logout }}>
+        <AuthContext.Provider value={{ user, setUser }}>
             {pathname.includes("chatbot-iframe") ? children : loading ? <SpinPage /> : children}
         </AuthContext.Provider>
     )

@@ -10,6 +10,7 @@ import { ThemeProvider } from "next-themes";
 import DashboardLayout from "@/components/DashboardLayout";
 import LandingLayout from "@/components/LandingLayout"
 import { usePathname } from 'next/navigation'
+import { AuthContextProvider } from "@/contexts/authContext";
 
 import ProtectedRoute from "@/components/ProtectedRouteWrapper";
 
@@ -23,7 +24,7 @@ export default function RootLayout({
 }) {
     const pathname = usePathname()
 
-    const noLayoutRequired = ['/chatbot-iframe', '/userid-input'];
+    const noLayoutRequired = ['/chatbot-iframe', '/userid-input', 'verify-email'];
     const landingLayoutRequired = ['/signin', '/signup', '/terms-of-service', '/privacy-policy', '/pricing', '/about', '/blog', '/document', '/features', '/api-document']
     const dashboardLayoutRequired = ['/blogs-post']
 
@@ -60,12 +61,14 @@ export default function RootLayout({
             <head />
             <body className={`bg-[#FCFCFC] dark:bg-[#121723] ${inter.className} custom-scrollbar`}>
                 <ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
-                    <Providers>
-                        {getLayout()}
-                        <ScrollToTop />
-                    </Providers>
+                    <AuthContextProvider>
+                        <Providers>
+                            {getLayout()}
+                            <ScrollToTop />
+                        </Providers>
+                    </AuthContextProvider>
                 </ThemeProvider>
             </body>
-        </html>
+        </html >
     );
 }

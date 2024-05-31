@@ -55,35 +55,45 @@ const Pricing = () => {
             </span>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
-          <PricingBox
-            packageName="Starter"
-            price={isMonthly ? "0" : "0"}
-            duration={isMonthly ? "mo" : "yr"}
-            subtitle="Enjoy your free trial."
-          >
-            <OfferList text="100 Free Prompts" status="active" />
-            <OfferList text="Custom GPT API" status="active" />
-            <OfferList text="Keyword Search" status="active" />
-            <OfferList text="Email Support" status="active" />
-            <OfferList text="GPT-4+" status="inactive" />
-            <OfferList text="Semantic Search" status="inactive" />
-          </PricingBox>
-          <PricingBox
-            packageName="Pro"
-            price={isMonthly ? "9" : "98"}
-            duration={isMonthly ? "mo" : "yr"}
-            subtitle="Enjoy your pro subscription."
-          >
-            <OfferList text="Unlimited Prompts" status="active" />
-            <OfferList text="Email & Website Support" status="active" />
-            <OfferList text="Custom GPT API" status="active" />
-            <OfferList text="Keyword Search" status="active" />
-            <OfferList text="GPT-4+" status="active" />
-            <OfferList text="Verified Prompts" status="inactive" />
-          </PricingBox>
-          <PricingBox
+        <div className="flex justify-center">
+          <div className="grid grid-cols-1 gap-x-10 gap-y-10 md:grid-cols-2 lg:grid-cols-2">
+            <PricingBox
+              packageName="Starter"
+              price={isMonthly ? "0" : "0"}
+              duration={isMonthly ? "mo" : "yr"}
+              subtitle="Enjoy your free trial."
+            >
+              <OfferList text="ChatGPT" status="active" />
+              <OfferList text="Google Gemini" status="inactive" />
+              <OfferList text="Perplexity" status="inactive" />
+              <OfferList text="Google Search" status="active" />
+              <OfferList text="File Search" status="inactive" />
+              <OfferList text="Website Search" status="inactive" />
+              <OfferList text="AI Assistants" status="inactive" />
+              <OfferList text="Website CustomGPT Integration" status="inactive" />
+              <OfferList text="100 Free Prompts" status="active" />
+              <OfferList text="Custom Prompt" status="active" />
+              <OfferList text="Prompt Sharing" status="inactive" />
+            </PricingBox>
+            <PricingBox
+              packageName="Pro"
+              price={isMonthly ? "9" : "98"}
+              duration={isMonthly ? "mo" : "yr"}
+              subtitle="Enjoy your pro subscription."
+            >
+              <OfferList text="ChatGPT" status="active" />
+              <OfferList text="Google Gemini" status="active" />
+              <OfferList text="Perplexity" status="active" />
+              <OfferList text="Google Search" status="active" />
+              <OfferList text="File Search" status="active" />
+              <OfferList text="Website Search" status="active" />
+              <OfferList text="AI Assistants" status="active" />
+              <OfferList text="Website CustomGPT Integration" status="active" />
+              <OfferList text="100 Free Prompts" status="active" />
+              <OfferList text="Custom Prompt" status="active" />
+              <OfferList text="Prompt Sharing" status="active" />
+            </PricingBox>
+            {/* <PricingBox
             packageName="Enterprise"
             price={isMonthly ? "50" : "540"}
             duration={isMonthly ? "mo" : "yr"}
@@ -95,7 +105,8 @@ const Pricing = () => {
             <OfferList text="Keyword Search" status="active" />
             <OfferList text="GPT-4+" status="active" />
             <OfferList text="Verified Prompts" status="active" />
-          </PricingBox>
+          </PricingBox> */}
+          </div>
         </div>
       </div>
 
@@ -155,7 +166,7 @@ const Pricing = () => {
       </div>
 
 
-      <div className='flex items-center flex-col mt-[100px] container'>
+      {/* <div className='flex items-center flex-col mt-[100px] container'>
         <div className="text-[38px] mb-[40px] font-bold" >Compare plans</div>
         <table className='bg-[#FFFFFF] text-black border dark:text-white w-full shadow-three hover:shadow-one dark:bg-gray-dark dark:shadow-two dark:hover:shadow-gray-dark"'>
           <thead className='dark:border-gray-700'>
@@ -210,7 +221,7 @@ const Pricing = () => {
           </tbody>
 
         </table>
-      </div>
+      </div> */}
     </section>
   );
 };
