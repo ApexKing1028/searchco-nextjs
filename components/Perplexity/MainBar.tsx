@@ -10,30 +10,30 @@ import {
 import { throttle } from '@/utils/data/throttle';
 
 import { ChatInput } from './ChatInput';
-import HomeContext from '@/contexts/homeContext';
-import { useChat } from 'ai/react';
+import { Message, useChat } from 'ai/react';
 import { ChatMessage } from './ChatMessage';
+import HomeContext from '@/contexts/homeContext';
+import { addDoc, collection, doc, getDocs, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/config/firebase';
+import { useAuth } from '@/contexts/authContext';
 
 const options = {
     api: "/api/chatgpt/chat"
-    // api: "/api/perplexity/chat"
 };
 
-const Page = () => {
-    const { messages, input, handleInputChange, handleSubmit } = useChat(options);
+type MainBarProps = {
+    chatId: string
+}
 
+const MainBar = ({ chatId }: MainBarProps) => {
+    const { messages, setMessages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat(options);
     const [autoScrollEnabled, setAutoScrollEnabled] = useState<boolean>(true);
     const [showScrollDownButton, setShowScrollDownButton] = useState<boolean>(false);
-
-    const {
-        state: {
-            isFullScreen
-        },
-    } = useContext(HomeContext);
-
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const { user } = useAuth();
+
 
     const handleScroll = () => {
         if (chatContainerRef.current) {
@@ -92,10 +92,55 @@ const Page = () => {
         };
     }, [messagesEndRef]);
 
+    const {
+        state: {
+            prompt
+        },
+    } = useContext(HomeContext);
+
+    useEffect(() => {
+        if (!isLoading && user) {
+            const addChatMessage = async () => {
+                const lastTwoMessages = messages.slice(-2);
+                const messagesCollectionRef = collection(db, 'history', user?.email!, 'chatgpt', chatId, 'messages');
+
+                for (const message of lastTwoMessages) {
+                    await addDoc(messagesCollectionRef, message);
+                }
+            }
+            addChatMessage();
+        }
+    }, [isLoading])
+
+    useEffect(() => {
+        if (user) {
+            const fetchMessageData = async () => {
+                const messagesCollectionRef = collection(db, 'history', user?.email!, 'chatgpt', chatId, 'messages');
+                const q = query(messagesCollectionRef, orderBy('createdAt', 'asc')); // or 'desc' for descending
+
+                try {
+                    const querySnapshot = await getDocs(q);
+                    const allMessages = querySnapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return {
+                            id: data.id,
+                            content: data.content,
+                            role: data.role
+                        } as Message;
+                    });
+                    setMessages(allMessages);
+                } catch (error) {
+                    console.error("Error getting documents: ", error);
+                }
+            };
+            fetchMessageData();
+        }
+    }, [user])
+
     return (
-        <div className="relative flex-1 overflow-hidden bg-[#f8f8f8] dark:bg-[#1d2430]" style={{ height: isFullScreen ? "calc(100vh - 10px)" : "calc(100vh - 100px)" }}>
+        <div className='flex flex-1'>
             <div
-                className="max-h-full overflow-x-hidden"
+                className="max-h-full overflow-x-hidden chat-scrollbar flex-1"
                 ref={chatContainerRef}
                 onScroll={handleScroll}
             >
@@ -115,15 +160,20 @@ const Page = () => {
                 />
             </div>
             <ChatInput
+                length={messages?.length || 0}
+                isLoading={isLoading}
                 textareaRef={textareaRef}
                 input={input}
                 handleInputChange={handleInputChange}
+                messages={messages}
                 onScrollDownClick={handleScrollDown}
                 handleSubmit={handleSubmit}
                 showScrollDownButton={showScrollDownButton}
+                chatId={chatId}
+                promptMessage={prompt}
             />
         </div>
     );
 };
 
-export default Page;
+export default MainBar;
