@@ -14,7 +14,7 @@ interface DialogProps {
 
 const Dialog: FC<DialogProps> = ({ open, onClose, addDataStore }) => {
     const [name, setName] = useState("");
-    const [instruction, setInstruction] = useState("You are helpful assistant.");
+    const [instruction, setInstruction] = useState("You are a helpful assistant. You must provide the information for questions on the content that you have.");
     const [description, setDescription] = useState("");
     const [visible, setVisible] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -142,7 +142,6 @@ const Dialog: FC<DialogProps> = ({ open, onClose, addDataStore }) => {
 
                                     <textarea
                                         rows={4}
-                                        name="openaiKey"
                                         placeholder="Enter datastore name."
                                         className="mt-[5px] border-stroke dark:text-[#eeeeee] dark:shadow-two w-full rounded-md border bg-[#f8f8f8] px-4 py-1 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                                         value={instruction}
@@ -159,7 +158,6 @@ const Dialog: FC<DialogProps> = ({ open, onClose, addDataStore }) => {
 
                                     <textarea
                                         rows={4}
-                                        name="openaiKey"
                                         placeholder="Enter description here."
                                         className="mt-[5px] border-stroke dark:text-[#eeeeee] dark:shadow-two w-full rounded-md border bg-[#f8f8f8] px-4 py-1 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                                         value={description}

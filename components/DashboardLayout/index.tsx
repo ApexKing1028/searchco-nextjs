@@ -32,8 +32,7 @@ const DashboardLayout = ({
     const pathname = usePathname();
     const { logout } = useLogout();
 
-    const isActive = (pth) => pathname === pth;
-
+    const isActive = (pth) => pathname.includes(pth);
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };

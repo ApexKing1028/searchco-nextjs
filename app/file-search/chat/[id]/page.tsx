@@ -1,11 +1,6 @@
 import React from 'react'
 import { Metadata } from "next";
-
 import FileStoreChatPage from "@/components/File-Search/Chat";
-
-import styles from "@/app/assistant/examples/shared/page.module.css";
-
-import Chat from "@/components/assistant/chat";
 
 export const metadata: Metadata = {
     title: "Search.co | File Datastore Chat Page",

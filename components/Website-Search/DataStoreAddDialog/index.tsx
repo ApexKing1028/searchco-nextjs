@@ -20,7 +20,7 @@ function isValidUrl(string) {
 }
 
 const Dialog: FC<DialogProps> = ({ open, onClose, addDataStore }) => {
-    const [instruction, setInstruction] = useState("You are helpful assistant for website.");
+    const [instruction, setInstruction] = useState("You are a customer service tool for website. You must answer to the questions based on the website content that you have.");
     const [description, setDescription] = useState("");
     const [visible, setVisible] = useState(false);
     const [name, setName] = useState("");
