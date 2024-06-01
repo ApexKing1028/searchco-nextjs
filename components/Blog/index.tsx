@@ -6,16 +6,8 @@ import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import localForage from "localforage";
 
-type Blog = {
-  id: string,
-  title: string,
-  summary: string,
-  date: Date,
-  imageUrl: string
-}
-
 const Blog = () => {
-  const [blogData, setBlogData] = useState<Blog>([])
+  const [blogData, setBlogData] = useState<any>([])
 
   const fetchData = async (flag = "fetch") => {
     try {
