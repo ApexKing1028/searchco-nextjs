@@ -107,61 +107,64 @@ const BlogDetailsPage = ({ id }: PageProps) => {
                                             />}
                                         </div>
                                     </div>
+                                    <div className="w-full">
+                                        
                                     <MemoizedReactMarkdown
-                                        className="prose dark:prose-invert flex-1"
-                                        remarkPlugins={[remarkGfm, remarkMath]}
-                                        rehypePlugins={[rehypeMathjax]}
-                                        components={{
-                                            a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
-                                            code({ node, inline, className, children, ...props }) {
-                                                if (children.length) {
-                                                    if (children[0] == '▍') {
-                                                        return <span className="animate-pulse cursor-default mt-1 w-full">▍</span>
-                                                    }
-
-                                                    children[0] = (children[0] as string).replace("`▍`", "▍")
+                                        className="prose dark:prose-invert flex-1 w-full min-w-[100%]"
+                                    remarkPlugins={[remarkGfm, remarkMath]}
+                                    rehypePlugins={[rehypeMathjax]}
+                                    components={{
+                                        a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+                                        code({ node, inline, className, children, ...props }) {
+                                            if (children.length) {
+                                                if (children[0] == '▍') {
+                                                    return <span className="animate-pulse cursor-default mt-1 w-full">▍</span>
                                                 }
 
-                                                const match = /language-(\w+)/.exec(className || '');
+                                                children[0] = (children[0] as string).replace("`▍`", "▍")
+                                            }
 
-                                                return !inline ? (
-                                                    <CodeBlock
-                                                        key={Math.random()}
-                                                        language={(match && match[1]) || ''}
-                                                        value={String(children).replace(/\n$/, '')}
-                                                        {...props}
-                                                    />
-                                                ) : (
-                                                    <code className={className} {...props}>
-                                                        {children}
-                                                    </code>
-                                                );
-                                            },
-                                            table({ children }) {
-                                                return (
-                                                    <table className="border-collapse border border-black px-3 py-1 dark:border-white w-full">
-                                                        {children}
-                                                    </table>
-                                                );
-                                            },
-                                            th({ children }) {
-                                                return (
-                                                    <th className="break-words border border-black bg-gray-500 px-3 py-1 text-white dark:border-white w-full">
-                                                        {children}
-                                                    </th>
-                                                );
-                                            },
-                                            td({ children }) {
-                                                return (
-                                                    <td className="break-words border border-black px-3 py-1 dark:border-white w-full">
-                                                        {children}
-                                                    </td>
-                                                );
-                                            },
-                                        }}
+                                            const match = /language-(\w+)/.exec(className || '');
+
+                                            return !inline ? (
+                                                <CodeBlock
+                                                    key={Math.random()}
+                                                    language={(match && match[1]) || ''}
+                                                    value={String(children).replace(/\n$/, '')}
+                                                    {...props}
+                                                />
+                                            ) : (
+                                                <code className={className} {...props}>
+                                                    {children}
+                                                </code>
+                                            );
+                                        },
+                                        table({ children }) {
+                                            return (
+                                                <table className="border-collapse border border-black px-3 py-1 dark:border-white w-full">
+                                                    {children}
+                                                </table>
+                                            );
+                                        },
+                                        th({ children }) {
+                                            return (
+                                                <th className="break-words border border-black bg-gray-500 px-3 py-1 text-white dark:border-white w-full">
+                                                    {children}
+                                                </th>
+                                            );
+                                        },
+                                        td({ children }) {
+                                            return (
+                                                <td className="break-words border border-black px-3 py-1 dark:border-white w-full">
+                                                    {children}
+                                                </td>
+                                            );
+                                        },
+                                    }}
                                     >
                                         {content}
                                     </MemoizedReactMarkdown>
+                                    </div>
                                 </div>
                             </div>
                         </div>

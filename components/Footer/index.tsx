@@ -38,14 +38,14 @@ const Footer = () => {
                   Useful Links
                 </h2>
                 <ul>
-                  <li>
+                  {/* <li>
                     <Link
                       href="/blog"
                       className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
                     >
                       Features
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link
                       href="/"
@@ -56,7 +56,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <Link
-                      href="/about"
+                      href="/blog"
                       className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
                     >
                       Blog
@@ -106,14 +106,14 @@ const Footer = () => {
                   Support & Help
                 </h2>
                 <ul>
-                  <li>
+                  {/* <li>
                     <Link
                       href="/docs"
                       className="mb-4 inline-block text-base text-body-color duration-300 hover:text-primary dark:text-body-color-dark dark:hover:text-primary"
                     >
                       Document
                     </Link>
-                  </li>
+                  </li> */}
                   {/* <li>
                     <Link
                       href="/apidocs"

@@ -4,17 +4,28 @@ import SectionTitle from "../Common/SectionTitle";
 import SingleBlog from "./SingleBlog";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "@/config/firebase";
+import localForage from "localforage";
+
+type Blog = {
+  id: string,
+  title: string,
+  summary: string,
+  date: Date,
+  imageUrl: string
+}
 
 const Blog = () => {
-  const [blogData, setBlogData] = useState([])
+  const [blogData, setBlogData] = useState<Blog>([])
 
   const fetchData = async (flag = "fetch") => {
     try {
-      let q = query(
-        collection(db, "posts"),
-      );
+      const cachedData = await localForage.getItem('blogData');
+      if (cachedData) {
+        setBlogData(cachedData as Blog);
+        return;
+      }
 
-
+      let q = query(collection(db, "posts"));
       const querySnapshot = await getDocs(q);
       const newStore = querySnapshot.docs.map(doc => {
         const dt = doc.data();
@@ -26,10 +37,12 @@ const Blog = () => {
           imageUrl: dt?.imageUrl,
         };
       });
+
+      await localForage.setItem('blogData', newStore);
+
       setBlogData(newStore);
     } catch (error) {
       console.error("Failed to fetch documents: ", error);
-
     };
   }
 
