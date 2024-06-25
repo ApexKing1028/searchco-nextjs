@@ -1,74 +1,76 @@
-"use client";
+import "@/styles/globals.css";
+import { Inter as FontSans } from "next/font/google"
+import localFont from "next/font/local"
 
-import ScrollToTop from "@/components/ScrollToTop";
-import { Inter } from "next/font/google";
-import "@/styles/index.css";
+import { Metadata } from "next";
+import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/providers/theme-provider"
+import { Toaster } from "@/components/ui/toaster";
+import { siteConfig } from "@/config/site"
+import Chatbot from '@/components/chatbot';
+import { AOSInit } from '@/components/aos-init';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import AuthProvider from "@/providers/auth-provider";
+import ScrollToTop from "@/components/ui/scroll-to-top";
 
-import { Providers } from "./providers";
-import { ToastContainer } from "react-toastify";
-import { ThemeProvider } from "next-themes";
-import DashboardLayout from "@/components/DashboardLayout";
-import LandingLayout from "@/components/LandingLayout"
-import { usePathname } from 'next/navigation'
-import { AuthContextProvider } from "@/contexts/authContext";
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
-import ProtectedRoute from "@/components/ProtectedRouteWrapper";
+const title = `AI Search - ${siteConfig.name}`;
+const description = "Search.co is AI Search Platform.";
 
-const inter = Inter({ subsets: ["latin"] });
+export const metadata: Metadata = {
+  title,
+  description,
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
+  metadataBase: new URL('https://search.co/'),
+  openGraph: {
+    title: title,
+    description: description,
+    url: new URL('https://search.co/'),
+    siteName: 'Search.co',
+    type: 'website',
+  },
+};
 
 
-export default function RootLayout({
-    children,
+export default async function RootLayout({
+  children,
 }: {
-    children: any;
+  children: React.ReactNode;
 }) {
-    const pathname = usePathname()
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+      </head>
+      <AOSInit />
+      <body
+        id='root'
+       className="custom-scrollbar"
+      >
+        <AuthProvider>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+          <TooltipProvider>
+            {children}
+            <Toaster />
+          </TooltipProvider>
+          <ScrollToTop />
+        </ThemeProvider>
+        </AuthProvider>
+        {/* <Chatbot /> */}
 
-    const noLayoutRequired = ['/chatbot-iframe', '/userid-input', 'verify-email'];
-    const landingLayoutRequired = ['/signin', '/signup', '/terms-of-service', '/privacy-policy', '/pricing', '/about', '/blog', '/document', '/features', '/api-document']
-    const dashboardLayoutRequired = ['/blogs-post']
-
-    const isNoLayoutRequired = noLayoutRequired.some(path => pathname.includes(path));
-    const isLandingLayoutRequired = landingLayoutRequired.some(path => pathname.includes(path));
-    const isDashboardLayoutRequired = dashboardLayoutRequired.some(path => pathname.includes(path));
-
-    const getLayout = () => {
-        if (isDashboardLayoutRequired) {
-            return (
-                <DashboardLayout>
-                    {children}
-                </DashboardLayout>
-            );
-        }
-        if (isNoLayoutRequired) {
-            return children;
-        } else if (isLandingLayoutRequired) {
-            return <LandingLayout>
-                {children}
-            </LandingLayout>
-        }
-        return (
-            <div className="w-full">
-                <DashboardLayout>
-                    {children}
-                </DashboardLayout>
-            </div>
-        );
-    };
-
-    return (
-        <html suppressHydrationWarning lang="en">
-            <head />
-            <body className={`bg-[#FCFCFC] dark:bg-[#121723] ${inter.className} custom-scrollbar`}>
-                <ThemeProvider attribute="class" enableSystem={false} defaultTheme="dark">
-                    <AuthContextProvider>
-                        <Providers>
-                            {getLayout()}
-                            <ScrollToTop />
-                        </Providers>
-                    </AuthContextProvider>
-                </ThemeProvider>
-            </body>
-        </html >
-    );
+      </body>
+    </html>
+  );
 }

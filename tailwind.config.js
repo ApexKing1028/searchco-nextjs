@@ -1,29 +1,21 @@
-/** @type {import('tailwindcss').Config} */
+const { fontFamily } = require("tailwindcss/defaultTheme")
 const colors = require("tailwindcss/colors");
-const { fontFamily } = require("tailwindcss/defaultTheme");
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./ui/**/*.{ts,tsx}"
   ],
-  darkMode: "class",
+  darkMode: ["class"],
   theme: {
     container: {
       center: true,
-      padding: "1rem",
+      padding: "2rem",
       screens: {
         "2xl": "1400px",
       },
-    },
-
-    screens: {
-      xs: "450px",
-      sm: "575px",
-      md: "768px",
-      lg: "992px",
-      xl: "1200px",
-      "2xl": "1400px",
     },
     extend: {
       colors: {
@@ -32,7 +24,6 @@ module.exports = {
         white: "#FFFFFF",
         black: "#121723",
         dark: "#1D2430",
-        primary: "#4A6CF7",
         yellow: "#FBB040",
         "bg-color-dark": "#171C28",
         "body-color": {
@@ -53,6 +44,10 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -78,7 +73,6 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-
       boxShadow: {
         signUp: "0px 5px 10px rgba(4, 10, 34, 0.2)",
         one: "0px 2px 3px rgba(7, 7, 77, 0.05)",
@@ -92,9 +86,6 @@ module.exports = {
         btn: "0px 1px 2px rgba(4, 10, 34, 0.15)",
         "btn-hover": "0px 1px 2px rgba(0, 0, 0, 0.15)",
         "btn-light": "0px 1px 2px rgba(0, 0, 0, 0.1)",
-      },
-      dropShadow: {
-        three: "0px 5px 15px rgba(6, 8, 15, 0.05)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -124,5 +115,8 @@ module.exports = {
       }
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-};
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography")
+  ],
+}
