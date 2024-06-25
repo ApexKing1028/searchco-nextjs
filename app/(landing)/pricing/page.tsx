@@ -10,11 +10,13 @@ export const metadata = {
 }
 
 const Page: NextPage = () => {
-    return (<>
-        <Breadcrumb
-            pageName="Pricing Page"
-            description=""
-        /><PricingPage /></>);
+    return (
+        <>
+            <Breadcrumb
+                pageName="Pricing Page"
+                description=""
+            /><PricingPage />
+        </>);
 };
 
 export default Page;

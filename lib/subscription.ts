@@ -33,17 +33,6 @@ export async function getUserSubscriptionPlan(
 
         if (subscription.plan.nickname === "Pro plan") {
             plan = proPlan
-        } else if (subscription.plan.nickname === "Hobby plan") {
-            plan = hobbyPlan
-        } else if (subscription.plan.nickname === "Basic plan") {
-            // if subscription is created before 2024-05-01, it's a legacy plan
-            console.log(subscription.created)
-            if (subscription.created < 1717200000) {
-                plan = legacyBasicPlan
-            } else {
-                plan = basicPlan
-            }
-
         }
     }
 

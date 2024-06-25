@@ -1,6 +1,6 @@
 import { SubscriptionPlan } from "@/types"
 
-export const basicPlan: SubscriptionPlan = {
+export const freePlan: SubscriptionPlan = {
     name: "FREE",
     stripePriceId: "",
 
